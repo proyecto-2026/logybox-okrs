@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGYBOX — Centro Asesor</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#ff8000;--ord:#cc6600;--orl:#fff3e6;
+  --dk:#111;--bg:#f4f4f2;--sf:#fff;
+  --bd:#e2e2de;--tx:#1a1a1a;--mu:#77776f;
+  --r:10px;--rs:6px;
+  --usa:#1d4ed8;--usabg:#dbeafe;
+  --cn:#b45309;--cnbg:#fff3e6;
+  --ok:#166534;--okbg:#dcfce7;
+  --warn:#92400e;--warnbg:#fff8ed;
+  --info:#1e40af;--infobg:#eff6ff;
+  --red:#991b1b;--redbg:#fef2f2;
+  --new:#6d28d9;--newbg:#ede9fe;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--dk);flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
+.logo-wrap{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.logo{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.5px}.logo span{color:var(--or)}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px}
+.nav-sec{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.nav-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.25);padding:0 12px 5px;text-transform:uppercase;letter-spacing:.8px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;color:rgba(255,255,255,0.5);font-size:12px;transition:all .12s;border-left:2px solid transparent}
+.ni:hover{color:#fff;background:rgba(255,255,255,0.04)}
+.ni.on{color:#fff;border-left-color:var(--or);background:rgba(255,128,0,0.08)}
+.ni-ic{font-size:13px;width:15px;text-align:center;flex-shrink:0}
+.sb-ft{margin-top:auto;padding:10px 12px;border-top:1px solid rgba(255,255,255,0.06);font-size:9px;color:rgba(255,255,255,0.2)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.topbar h1{font-size:14px;font-weight:600;white-space:nowrap}
+.srch-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:5px 12px;width:210px}
+.srch-wrap input{border:none;background:none;outline:none;font-size:12px;color:var(--tx);width:100%}
+.srch-wrap input::placeholder{color:var(--mu)}
+.content{flex:1;overflow-y:auto;padding:14px}
+
+/* SECTIONS */
+.sec{display:none}.sec.on{display:block}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.chip{padding:4px 10px;border-radius:14px;border:1px solid var(--bd);font-size:11px;cursor:pointer;color:var(--mu);background:var(--sf);transition:all .12s}
+.chip:hover{border-color:var(--or);color:var(--or)}
+
+/* CARDS */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:7px;overflow:hidden}
+.card-hd{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;transition:background .1s;user-select:none}
+.card-hd:hover{background:#fafaf8}
+.ci{width:30px;height:30px;border-radius:7px;background:var(--orl);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ct{font-size:13px;font-weight:600;line-height:1.3}
+.cm{font-size:11px;color:var(--mu);margin-top:1px}
+.cr{margin-left:auto;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
+.b-usa{background:var(--usabg);color:var(--usa)}
+.b-cn{background:var(--cnbg);color:var(--cn)}
+.b-op{background:var(--okbg);color:var(--ok)}
+.b-nm{background:#ede9fe;color:#6d28d9}
+.b-at{background:#fce7f3;color:#9d174d}
+.b-gn{background:#f3f4f6;color:#374151}
+.b-new{background:var(--newbg);color:var(--new)}
+.chev{color:var(--mu);font-size:11px;transition:transform .2s}
+.chev.op{transform:rotate(180deg)}
+.card-bd{display:none;padding:0 13px 13px;border-top:1px solid var(--bd)}
+.card-bd.op{display:block}
+.slbl{font-size:10px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.5px;margin:11px 0 5px}
+.slbl:first-child{margin-top:10px}
+.tpl{background:#f8f8f6;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 11px;font-size:12px;line-height:1.65;white-space:pre-wrap;color:var(--tx);position:relative;margin:7px 0 4px;padding-right:68px}
+.cpbtn{position:absolute;top:6px;right:6px;background:var(--or);color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.cpbtn:hover{background:var(--ord)}
+.al{border-radius:var(--rs);padding:7px 10px;font-size:12px;line-height:1.5;margin:5px 0;border-left:3px solid}
+.al-w{background:var(--warnbg);border-color:var(--or);color:var(--warn)}
+.al-i{background:var(--infobg);border-color:#3b82f6;color:var(--info)}
+.al-ok{background:var(--okbg);border-color:#22c55e;color:var(--ok)}
+.al-r{background:var(--redbg);border-color:#ef4444;color:var(--red)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:7px 0}
+.mc{background:var(--bg);border-radius:var(--rs);padding:7px 9px}
+.mc .ml{font-size:10px;color:var(--mu);margin-bottom:1px}
+.mc .mv{font-size:12px;font-weight:600}
+.addr{background:#111;color:#ff8000;border-radius:var(--rs);padding:9px 11px;font-family:'Courier New',monospace;font-size:11px;line-height:1.8;position:relative;margin:7px 0;padding-right:68px}
+.addr .cpbtn{background:rgba(255,128,0,0.2);color:var(--or)}
+.fs{display:flex;gap:9px;margin-bottom:9px;align-items:flex-start}
+.fn{width:21px;height:21px;background:var(--or);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ft{font-size:12px;line-height:1.45}
+.ft .sm{font-size:11px;color:var(--mu);margin-top:2px}
+.ilist{font-size:12px;color:var(--mu);line-height:1.6;padding-left:14px;margin:4px 0}
+.ilist li{margin-bottom:2px}.ilist li strong{color:var(--tx)}
+
+/* SEARCH */
+.sr{display:none}.sr.on{display:block}
+.sri{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 12px;margin-bottom:6px;cursor:pointer}
+.sri:hover{border-color:var(--or)}
+.sri-t{font-size:13px;font-weight:600}.sri-s{font-size:11px;color:var(--mu);margin-top:1px}
+
+/* ============ AI PANEL — Apple-style ============ */
+.ai{width:380px;background:#fafaf8;border-left:1px solid rgba(0,0,0,0.07);display:flex;flex-direction:column;flex-shrink:0}
+
+/* Header */
+.ai-hd{padding:14px 16px 12px;background:#fafaf8;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ai-dot{width:8px;height:8px;background:#34c759;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 2px rgba(52,199,89,0.2)}
+.ai-ht{font-size:13px;font-weight:700;color:#1a1a1a;letter-spacing:-.2px}
+.ai-hs{font-size:11px;color:#8e8e93;margin-top:1px}
+
+/* Segment tabs — pill style */
+.seg-tabs{display:flex;padding:10px 12px 0;gap:4px;background:#fafaf8;border-bottom:1px solid rgba(0,0,0,0.06);flex-shrink:0}
+.stab{flex:1;text-align:center;padding:7px 4px 9px;font-size:11px;font-weight:600;cursor:pointer;color:#8e8e93;border-bottom:2px solid transparent;transition:all .18s;letter-spacing:.1px}
+.stab:hover{color:#1a1a1a}
+.stab.on{color:var(--or);border-bottom-color:var(--or);font-weight:700}
+
+/* Segment content */
+.seg-content{flex:1;overflow-y:auto;padding:14px 12px}
+.seg{display:none}.seg.on{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Chat bubbles */
+.chat-msgs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.msg{max-width:90%;font-size:12px;line-height:1.65;border-radius:16px;padding:9px 12px;white-space:pre-wrap;word-break:break-word}
+.msg-b{background:#fff;color:#1a1a1a;align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.07)}
+.msg-u{background:var(--or);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+
+/* Quick buttons — Apple list style */
+.qbtns{display:flex;flex-direction:column;gap:1px;background:rgba(0,0,0,0.04);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.qbtn{text-align:left;padding:10px 12px;font-size:12px;cursor:pointer;color:#1a1a1a;background:#fff;transition:background .1s;line-height:1.4;border:none;width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.qbtn::after{content:'›';color:#c7c7cc;font-size:16px;font-weight:300;flex-shrink:0}
+.qbtn:hover{background:#f0f0f0}
+.qbtn:active{background:#e8e8e8}
+.qbtn:first-child{border-radius:12px 12px 0 0}
+.qbtn:last-child{border-radius:0 0 12px 12px}
+.qbtn:first-child:last-child{border-radius:12px}
+
+/* Section label above qbtns */
+.q-section-lbl{font-size:10px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.7px;margin:14px 2px 6px;padding:0 2px}
+
+/* China filter options — Apple toggle style */
+.cn-lbl{font-size:10px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;padding:0 2px}
+.cn-opts-wrap{background:rgba(0,0,0,0.04);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.cn-opt{display:flex;align-items:flex-start;gap:10px;font-size:12px;cursor:pointer;padding:10px 12px;background:#fff;transition:background .1s;border:none;width:100%;text-align:left;border-top:1px solid rgba(0,0,0,0.05)}
+.cn-opt:first-child{border-top:none}
+.cn-opt:hover{background:#f5f5f5}
+.cn-opt.sel{background:#fff8f0}
+.cn-opt input[type=radio]{display:none}
+.cn-radio{width:18px;height:18px;border-radius:50%;border:1.5px solid #c7c7cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s;background:#fff}
+.cn-opt.sel .cn-radio{border-color:var(--or);background:var(--or)}
+.cn-opt.sel .cn-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;display:block}
+.cn-opt-t{font-weight:600;color:#1a1a1a;font-size:12px}
+.cn-opt-s{font-size:11px;color:#8e8e93;margin-top:2px}
+.cn-res{margin:8px 0;display:none}
+
+/* Form inputs — Apple style */
+.fin-section{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.fin-row{display:flex;align-items:center;padding:10px 12px;border-top:1px solid rgba(0,0,0,0.05)}
+.fin-row:first-child{border-top:none}
+.fin-row-lbl{font-size:12px;color:#1a1a1a;font-weight:500;width:110px;flex-shrink:0}
+.fin{flex:1;border:none;background:none;outline:none;font-size:12px;color:#1a1a1a;font-family:inherit;text-align:right;color:#3c3c43}
+.fin::placeholder{color:#c7c7cc}
+.fin-g2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.fin-g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.fin-lbl{font-size:10px;color:#8e8e93;margin-bottom:3px;margin-top:8px;padding:0 2px}
+.gen-btn{width:100%;padding:11px;margin-top:10px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:-.1px;transition:all .15s}
+.gen-btn:hover{background:var(--ord);transform:scale(.99)}
+.gen-btn:active{transform:scale(.97)}
+
+/* Search results in Buscar tab */
+.sr-result{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);transition:box-shadow .15s}
+.sr-result:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.sr-result-hdr{padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none;transition:background .1s}
+.sr-result-hdr:hover{background:#f8f8f6}
+.sr-result-hdr.open-hdr{background:#fff8f0}
+.sr-result-title{font-size:12px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:6px}
+.sr-result-tag{font-size:10px;font-weight:600;padding:2px 6px;border-radius:6px;background:var(--orl);color:var(--or)}
+.sr-chev-icon{color:#c7c7cc;font-size:13px;transition:transform .22s ease;font-weight:300;line-height:1}
+.sr-chev-icon.open{transform:rotate(180deg);color:var(--or)}
+.sr-result-body{display:none;padding:0 14px 12px;font-size:12px;line-height:1.65;white-space:pre-wrap;color:#3c3c43;border-top:1px solid rgba(0,0,0,0.05)}
+.sr-result-body.open{display:block;animation:fadeIn .18s ease}
+.sr-copy-btn{margin:8px 14px 0;display:inline-flex;align-items:center;gap:5px;background:var(--or);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.sr-copy-btn:hover{background:var(--ord)}
+.sr-copy-btn.copied{background:#34c759}
+
+/* Input area */
+.ai-inp{padding:10px 12px 12px;border-top:1px solid rgba(0,0,0,0.06);flex-shrink:0;background:#fafaf8}
+.ia-wrap{display:flex;align-items:flex-end;gap:8px;background:#fff;border-radius:14px;padding:6px 6px 6px 12px;box-shadow:0 0 0 1px rgba(0,0,0,0.08)}
+.ia-wrap:focus-within{box-shadow:0 0 0 2px var(--or)}
+.ia-wrap textarea{flex:1;border:none;background:none;outline:none;font-size:12px;font-family:inherit;resize:none;min-height:34px;max-height:100px;line-height:1.5;color:#1a1a1a;padding:4px 0}
+.ia-wrap textarea::placeholder{color:#c7c7cc}
+.sndbtn{background:var(--or);color:#fff;border:none;border-radius:9px;width:30px;height:30px;font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.sndbtn:hover{background:var(--ord);transform:scale(1.05)}
+.sndbtn:active{transform:scale(.95)}
+
+/* Copy button in chat */
+.chat-copy-btn{display:inline-flex;align-items:center;gap:5px;background:var(--or);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;margin:2px 0 6px;transition:all .15s}
+.chat-copy-btn:hover{background:var(--ord)}
+.chat-copy-btn.copied{background:#34c759}
+
+/* Dots animation */
+.dots span{display:inline-block;width:5px;height:5px;background:#c7c7cc;border-radius:50%;margin:0 2px;animation:blink 1.4s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+
+/* Divider */
+.divider{height:1px;background:rgba(0,0,0,0.06);margin:10px 0}
+
+/* TOAST */
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:6px 14px;border-radius:14px;font-size:11px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999}
+.toast.on{opacity:1}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--bd);margin:10px 0}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+@media(max-width:900px){.ai{display:none}}
+@media(max-width:640px){.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast">✓ Copiado</div>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo">LOGY<span>BOX</span></div>
+    <div class="logo-sub">Centro de Recursos — Asesores</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Plantillas</div>
+    <div class="ni on" onclick="goSec('nuevos',this)"><span class="ni-ic">🆕</span>Clientes nuevos</div>
+    <div class="ni" onclick="goSec('usa',this)"><span class="ni-ic">🇺🇸</span>Servicio USA</div>
+    <div class="ni" onclick="goSec('china',this)"><span class="ni-ic">🇨🇳</span>Servicio China</div>
+    <div class="ni" onclick="goSec('atencion',this)"><span class="ni-ic">❤️</span>Atención al cliente</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Info</div>
+    <div class="ni" onclick="goSec('info',this)"><span class="ni-ic">📋</span>Info rápida</div>
+    <div class="ni" onclick="goSec('flujos',this)"><span class="ni-ic">🔄</span>Flujos</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Links</div>
+    <div class="ni" onclick="open_('https://logybox.com')"><span class="ni-ic">🌐</span>logybox.com</div>
+    <div class="ni" onclick="open_('https://registro.logybox.com/?referred=MKT')"><span class="ni-ic">📝</span>Registro</div>
+    <div class="ni" onclick="open_('https://box.logybox.com')"><span class="ni-ic">📦</span>Portal USA</div>
+    <div class="ni" onclick="open_('https://china.logybox.com')"><span class="ni-ic">🇨🇳</span>Portal China</div>
+    <div class="ni" onclick="open_('https://wa.link/eci8k3')"><span class="ni-ic">💬</span>Asesor Felipe (China)</div>
+    <div class="ni" onclick="open_('https://logybox.com/calculadora/#calcular')"><span class="ni-ic">🧮</span>Calculadora envíos</div>
+  </div>
+  <div class="sb-ft">v3.0 · Versus Studio · #VERSUSTHECOMMON</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="sec-title">Clientes nuevos</h1>
+    <div class="srch-wrap">
+      <span style="font-size:12px;color:var(--mu)">🔍</span>
+      <input type="text" id="srch-in" placeholder="Buscar plantilla..." oninput="doSearch(this.value)">
+    </div>
+  </div>
+  <div class="content" id="content-area">
+    <div class="sr" id="sr-box"></div>
+
+    <!-- ========== CLIENTES NUEVOS ========== -->
+    <div class="sec on" id="sec-nuevos">
+      <div class="chips">
+        <div class="chip" onclick="openC('cn-cómo-funciona-largo')">Cómo funciona (largo)</div>
+        <div class="chip" onclick="openC('cn-cómo-funciona-corto')">Cómo funciona (corto)</div>
+        <div class="chip" onclick="openC('cn-registro')">Mensaje registro</div>
+        <div class="chip" onclick="openC('cn-negocios')">Para negocios</div>
+        <div class="chip" onclick="openC('cn-ahorro')">Cómo funciona + ahorro</div>
+        <div class="chip" onclick="openC('cn-duplicacion')">Evitar duplicación</div>
+      </div>
+
+      <div class="card" id="cn-cómo-funciona-largo">
+        <div class="card-hd" onclick="tog('cn-cómo-funciona-largo')">
+          <div class="ci">📦</div>
+          <div><div class="ct">Cómo funciona — mensaje largo</div><div class="cm">Explicación completa del casillero</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-cómo-funciona-largo">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-cómo-funciona-largo">
+          <div class="tpl" id="t-cf-largo">Somos un casillero virtual: te damos una dirección en *EE.UU o China* para que puedas comprar en cualquier tienda del mundo y recibir tus pedidos en Colombia, sin enredos.
+
+🔥¿Cómo funciona?
+1️⃣ Te registras gratis y recibes tu dirección internacional.
+🔗 https://registro.logybox.com/?referred=MKT
+2️⃣ Haces tus compras online y agregas la dirección de tu casillero
+3️⃣ Nosotros recibimos tus paquetes, los organizamos (si son varios), y los traemos hasta tu casa en Colombia.
+4️⃣ Todo con seguimiento y asesoría personalizada.
+
+Ayudamos a importar productos desde Estados Unidos y China hasta Colombia, con opciones de envío eficientes y seguras.
+📦 Puedes cotizar tus envíos, consolidar paquetes y aprovechar beneficios exclusivos.<button class="cpbtn" onclick="cp(event,'t-cf-largo')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-cómo-funciona-corto">
+        <div class="card-hd" onclick="tog('cn-cómo-funciona-corto')">
+          <div class="ci">⚡</div>
+          <div><div class="ct">Cómo funciona — mensaje corto</div><div class="cm">Versión rápida para primer contacto</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-cómo-funciona-corto">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-cómo-funciona-corto">
+          <div class="tpl" id="t-cf-corto">¡Hola, [NOMBRE]!
+Usar tu casillero es muy fácil:
+1️⃣ Te registras gratis y recibes tu dirección internacional
+👉 https://registro.logybox.com/?referred=MKT
+2️⃣ Haces tus compras online y usas esa dirección.
+3️⃣ Recibimos tus paquetes, los organizamos y te los enviamos a tu casa en Colombia.
+4️⃣ Todo con seguimiento y asesoría personalizada.
+
+¿Qué producto estás interesado en traer?<button class="cpbtn" onclick="cp(event,'t-cf-corto')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-registro">
+        <div class="card-hd" onclick="tog('cn-registro')">
+          <div class="ci">📝</div>
+          <div><div class="ct">Mensaje de registro</div><div class="cm">Invitar a abrir el casillero</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-registro">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-registro">
+          <div class="tpl" id="t-registro">📦 ¡Abre tu casillero internacional con LogyBox!
+✅ Accedes a mejores precios
+✅ Puedes solicitar devolución de impuestos
+✅ Consolidas paquetes para ahorrar
+✅ Plataforma online para seguir todo tu envío
+✅ Asesoría personalizada
+
+Regístrate gratis 👉 https://registro.logybox.com/?referred=MKT<button class="cpbtn" onclick="cp(event,'t-registro')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-negocios">
+        <div class="card-hd" onclick="tog('cn-negocios')">
+          <div class="ci">🏢</div>
+          <div><div class="ct">Mensaje para negocios</div><div class="cm">Primer contacto B2B</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-negocios">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-negocios">
+          <div class="tpl" id="t-negocios">¡Hola! 👋
+En LogyBox somos aliados de negocios como el tuyo.
+Ayudamos a importar productos desde Estados Unidos y China hasta Colombia, con opciones de envío eficientes y seguras.
+
+📦 Puedes cotizar tus envíos, consolidar paquetes y aprovechar beneficios exclusivos.
+
+¿Quieres que te contemos cómo funciona o cotizar tu próxima importación?<button class="cpbtn" onclick="cp(event,'t-negocios')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-ahorro">
+        <div class="card-hd" onclick="tog('cn-ahorro')">
+          <div class="ci">💡</div>
+          <div><div class="ct">Cómo funciona + ahorro</div><div class="cm">Explica el cobro mínimo y cómo aprovecharlo</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-ahorro">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-ahorro">
+          <div class="tpl" id="t-ahorro">📦 ¿Cómo funciona el costo de envío con LogyBox?
+
+[NOMBRE] El precio se calcula según el peso del paquete:
+✅ USD $2.30 por libra (mínimo 5 lbs)
+✅ Envío mínimo total: USD $23.50
+✅ Seguro básico: $5 USD adicional (cubre hasta $100 USD)
+
+💡 Tip para ahorrar:
+¡Aprovechá las 5 lbs al máximo! Si enviás varios productos juntos, el costo por artículo baja bastante.
+
+Por ejemplo, unos zapatos pesan entre 1.5 y 2 lbs — así que si solo comprás eso, estás pagando las 5 lbs mínimas. ¡Sumá más cosas y que te rinda el envío!
+
+Calculá tu envío en: logybox.com/calculadora 🚀<button class="cpbtn" onclick="cp(event,'t-ahorro')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-duplicacion">
+        <div class="card-hd" onclick="tog('cn-duplicacion')">
+          <div class="ci">🚦</div>
+          <div><div class="ct">Evitar duplicación de mensajes</div><div class="cm">Cuando hay alto volumen de solicitudes</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-cn-duplicacion">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-duplicacion">
+          <div class="tpl" id="t-duplicacion">📣 ¡Hola! Gracias por escribirnos.
+En este momento estamos recibiendo un alto volumen de solicitudes, por lo que nuestro tiempo de respuesta puede ser un poco mayor de lo habitual.
+
+💬 Si ya estás siendo atendido por uno de nuestros asesores en el chat, evita escribir por otros canales (Instagram, WhatsApp o correo), esto nos ayuda a darte respuesta más rápida y ordenada. 💪🏼
+
+¡Gracias por tu paciencia! Estamos trabajando para responderte lo más pronto posible. 🙌🏼<button class="cpbtn" onclick="cp(event,'t-duplicacion')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cn-uso-casillero">
+        <div class="card-hd" onclick="tog('cn-uso-casillero')">
+          <div class="ci">🎯</div>
+          <div><div class="ct">Uso del casillero — paso a paso</div><div class="cm">Cómo comprar y traer con LogyBox</div></div>
+          <div class="cr"><span class="badge b-new">Nuevo</span><span class="chev" id="cv-cn-uso-casillero">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cn-uso-casillero">
+          <div class="tpl" id="t-uso-casillero">👉 Para comenzar a comprar en estados unidos 🇺🇸 y traer con LogyBox, solo tienes que seguir estos pasos:
+
+1️⃣ Registrate gratis y abre tu casillero:
+🔗 https://registro.logybox.com/?referred=MKT
+
+2️⃣ Una vez tengas tu número de casillero, creá tu cuenta en Amazon (si aún no la tienes).
+
+3️⃣ En la dirección de envío en Amazon, colocás nuestra dirección en Miami + tu número de casillero. Esa será tu nueva dirección en EE.UU.
+
+Nosotros recibimos tu compra, te notificamos, haces el pago de acuerdo con el peso de tu paquete y lo enviamos hasta la puerta de tu casa en 5 días hábiles promedio.
+
+Si tienes alguna duda adicional, estamos para resolvértela 👋<button class="cpbtn" onclick="cp(event,'t-uso-casillero')">Copiar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== USA ========== -->
+    <div class="sec" id="sec-usa">
+      <div class="chips">
+        <div class="chip" onclick="openC('cu-bienvenida')">Bienvenida USA</div>
+        <div class="chip" onclick="openC('cu-costos')">Costos envío</div>
+        <div class="chip" onclick="openC('cu-iphone')">iPhone / celular</div>
+        <div class="chip" onclick="openC('cu-laptop')">Laptop / Nintendo</div>
+        <div class="chip" onclick="openC('cu-despacho')">Despacho</div>
+        <div class="chip" onclick="openC('cu-postpago')">Post-pago</div>
+        <div class="chip" onclick="openC('cu-seguimiento')">Seguimiento</div>
+        <div class="chip" onclick="openC('cu-taxes')">Taxes</div>
+        <div class="chip" onclick="openC('cu-cobro')">Cobro mínimo</div>
+        <div class="chip" onclick="openC('cu-normativa')">Normativa 2026</div>
+      </div>
+
+      <div class="card" id="cu-bienvenida">
+        <div class="card-hd" onclick="tog('cu-bienvenida')">
+          <div class="ci">👋</div>
+          <div><div class="ct">Bienvenida nuevo cliente USA</div><div class="cm">Primera interacción con cliente activo</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cu-bienvenida">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-bienvenida">
+          <div class="tpl" id="t-busa">¡Hola! 👋 Bienvenid@ a LOGYBOX — el casillero que conecta el mundo con vos.
+
+¿Cómo funciona?
+✅ Te damos una dirección física en Miami, Florida
+✅ Comprás en Amazon, Shein, Temu, Nike, Apple o donde quieras
+✅ Ponés esa dirección como destino de tu compra
+✅ El paquete llega a Miami, lo recibimos y lo enviamos a Colombia
+
+Tu dirección en Miami es:
+📦 6900 NW 46th Street, Miami - Florida 33166
+Tel: +1 (305) 507-8635 + TU CÓDIGO LBX
+
+⚠️ Tu código LBX lo encontrás en tu portal (box.logybox.com). Siempre ponélo al final de la dirección.
+
+Calculá el costo en: www.logybox.com 🚀
+
+¿Ya tenés alguna compra lista o tenés dudas?<button class="cpbtn" onclick="cp(event,'t-busa')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-costos">
+        <div class="card-hd" onclick="tog('cu-costos')">
+          <div class="ci">💸</div>
+          <div><div class="ct">Costos de envío USA → Colombia</div><div class="cm">Tarifas, seguro, impuestos, tiempos</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cu-costos">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-costos">
+          <div class="g2" style="margin-top:10px">
+            <div class="mc"><div class="ml">Flete por libra</div><div class="mv">USD $2.30/lb</div></div>
+            <div class="mc"><div class="ml">Total mínimo (5 lbs)</div><div class="mv">USD $23.50 ✅</div></div>
+            <div class="mc"><div class="ml">Seguro básico</div><div class="mv">$5 USD (cubre $100)</div></div>
+            <div class="mc"><div class="ml">Seguro total</div><div class="mv">5% del valor declarado</div></div>
+            <div class="mc"><div class="ml">Import Fee</div><div class="mv">$5 o $0.25/lb (mayor)</div></div>
+            <div class="mc"><div class="ml">Recargo aerolínea</div><div class="mv">$0.40/lb (mín. 5 lbs)</div></div>
+            <div class="mc"><div class="ml">Impuesto USA</div><div class="mv">0% hasta $200 USD</div></div>
+            <div class="mc"><div class="ml">Más de $200 USD</div><div class="mv">30% IVA + arancel</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">Consolidación · Bodegaje 1 mes · Sin recargo volumétrico</div><div class="mv">Todo GRATIS ✅</div></div>
+          </div>
+          <div class="tpl" id="t-costos">💸 Tarifas de envío desde USA a Colombia:
+
+1️⃣ Flete: $2.30 USD por libra (mínimo 5 libras)
+2️⃣ Seguro: $5 USD por envío (cubre hasta $100 en pérdidas)
+   → Recomendamos asegurar el 100%: 5% del valor declarado
+3️⃣ Import Fee: $5 USD para paquetes hasta 20 lbs o $0.25/lb (el mayor)
+4️⃣ Recargo aerolínea: $0.40 USD por libra (mínimo 5 lbs)
+
+💰 Desglose mínimo (5 lbs):
+• Flete: 5 × $2.30 = $11.50
+• Recargo aerolínea: 5 × $0.40 = $2.00
+• Import Fee: $5.00
+• Seguro básico: $5.00
+👉 TOTAL mínimo: USD $23.50
+
+📌 Impuestos al recibir en Colombia:
+• Hasta USD $200 declarado → 0% ✅
+• Más de USD $200 → 30% (IVA + arancel)
+• Laptops hasta $560 USD → 0%
+• Celulares/tablets hasta $230 USD → 0%
+
+✅ Envíos diarios · Entrega en 3-5 días hábiles
+✅ Sin recargos por volumen ni consolidación
+✅ Bodegaje gratis 1 mes en Miami
+✅ Rastreo y asesoría personalizada
+
+💡 Calculá tu envío: logybox.com/calculadora<button class="cpbtn" onclick="cp(event,'t-costos')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-iphone">
+        <div class="card-hd" onclick="tog('cu-iphone')">
+          <div class="ci">📱</div>
+          <div><div class="ct">iPhone y celulares — tarifa especial</div><div class="cm">USD $85 tarifa plana · cualquier modelo</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cu-iphone">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-iphone">
+          <div class="al al-w" style="margin-top:10px">Celulares y tablets desde USA: USD $35 + seguro (valor del equipo menor a $230). Si supera $230 USD aplica 19% de impuesto al recibir. Tablets también aplica esta tarifa.</div>
+          <div class="tpl" id="t-iphone">Hola 👋 El envío de celulares y tablets desde USA con LogyBox tiene estas tarifas:
+
+📱 USD $35 + seguro por ítem
+(aplica para celulares y tablets con valor inferior a $230 USD)
+
+⚠️ Si el equipo supera los $230 USD → se aplica 19% de impuesto adicional al recibir en Colombia.
+
+🔒 Seguro:
+• $5 USD → cubre hasta $100 USD
+• 5% del valor → cubre el 100%
+
+📦 Proceso:
+1️⃣ Registrate y obtené tu casillero gratis
+2️⃣ Comprá en la tienda oficial de Apple, Best Buy o donde prefieras
+3️⃣ Poné la dirección de Miami + tu código LBX como destino
+4️⃣ Nosotros lo recibimos y enviamos a Colombia
+
+💡 Tip: en Apple USA podés solicitar devolución de taxes (Sales Tax):
+🔗 https://logybox.com/beneficios-de-comprar-en-apple-y-enviar-a-nuestro-casillero-sin-impuestos/
+
+¿Ya tenés tu casillero activo? 😊<button class="cpbtn" onclick="cp(event,'t-iphone')">Copiar</button></div>
+          <div class="slbl">Versión corta — cualquier celular</div>
+          <div class="tpl" id="t-celular-corto">¡Sí enviamos celulares y tablets! 📱
+
+💰 Desde USA: USD $35 + seguro por ítem
+💰 Desde China: USD $75 por ítem
+
+📋 Importante:
+• Celulares/tablets hasta USD $230 → 0% impuesto
+• Valor superior a USD $230 → 19% impuesto al recibir
+
+🔒 Seguro:
+✅ Básico: $5 USD (cubre hasta $100 USD)
+🛡️ Total: 5% del valor declarado (cubre el 100%)
+
+¿Tu celular es de USA o China? 😊<button class="cpbtn" onclick="cp(event,'t-celular-corto')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-laptop">
+        <div class="card-hd" onclick="tog('cu-laptop')">
+          <div class="ci">💻</div>
+          <div><div class="ct">Laptop, Nintendo y electrónicos grandes</div><div class="cm">Envío especial $60 USD · sale martes</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cu-laptop">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-laptop">
+          <div class="tpl" id="t-laptop">¡Hola! 👋🏼
+El envío de [LAPTOP/PRODUCTO] desde USA a Colombia con LogyBox:
+
+💰 USD $65 + seguro por laptop
+(para laptops con valor menor a $560 USD / 50 UVT)
+
+⚠️ Si la laptop supera los $560 USD → aplica 19% de impuesto adicional al recibir.
+
+✔️ Despacho: una vez por semana (los martes)
+✔️ Tiempo: 1 a 2 semanas hasta tu dirección en Colombia
+✔️ La laptop viaja sola, no se mezcla con otros artículos
+
+📦 Necesitás tener tu casillero activo en LogyBox (gratis y rápido de activar).
+
+¿Ya tenés tu casillero? 😊<button class="cpbtn" onclick="cp(event,'t-laptop')">Copiar</button></div>
+          <div class="slbl">Versión Nintendo</div>
+          <div class="tpl" id="t-nintendo">¡Hola! 👋🏼
+Para traer tu Nintendo desde Estados Unidos con LogyBox, el costo se calcula por peso:
+
+💰 USD $2.30 por libra (mínimo 5 lbs · envío mínimo total: ~USD $23.50)
++ Import Fee: $5 USD o $0.25/lb (el que sea mayor)
++ Seguro: $5 USD básico
+
+📌 Impuestos: si el valor declarado es menos de $200 USD → 0% impuesto ✅
+
+🔸 Despachamos normalmente los martes, tarda 1 a 2 semanas.
+🔸 Podés agregar otros productos mientras no sean líquidos ni inflamables.
+
+📦 Necesitás tener tu casillero activo en LogyBox (gratis).
+
+¿Ya tenés tu casillero? 😊<button class="cpbtn" onclick="cp(event,'t-nintendo')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-despacho">
+        <div class="card-hd" onclick="tog('cu-despacho')">
+          <div class="ci">📤</div>
+          <div><div class="ct">Despacho — cómo funciona</div><div class="cm">Factura, pago y proceso</div></div>
+          <div class="cr"><span class="badge b-op">Ops</span><span class="chev" id="cv-cu-despacho">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-despacho">
+          <div class="tpl" id="t-despacho">¡Listo pues! 📦 Una vez hagas el despacho desde el portal, la factura te llega en 2 a 3 horas.
+
+Si lo hacés después de las 5:00 p.m., la factura llega el siguiente día hábil.
+
+En la factura vas a ver:
+📍 Dirección del destinatario
+💳 Medios de pago disponibles
+💰 Valor final a pagar
+
+⚠️ No te guiés por el valor que muestra la plataforma — esperá siempre la factura, ese es el valor real.
+
+El pago se reporta directamente en la plataforma. Si necesitás corregir la dirección, podés hacerlo en el campo de observaciones al reportar el pago. 👍<button class="cpbtn" onclick="cp(event,'t-despacho')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-postpago">
+        <div class="card-hd" onclick="tog('cu-postpago')">
+          <div class="ci">✅</div>
+          <div><div class="ct">Confirmación post-pago</div><div class="cm">Después de que el cliente reporta el pago</div></div>
+          <div class="cr"><span class="badge b-op">Ops</span><span class="chev" id="cv-cu-postpago">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-postpago">
+          <div class="tpl" id="t-postpago">¡Listo! ✅ Pago reportado — de acá en adelante nosotros nos encargamos.
+
+¿Qué sigue?
+✈️ Cuando tu paquete salga de Miami, el estado cambia a MANIFESTADO
+📧 Llegará correo desde alertas@logybox.com con los estados más importantes
+📱 Podés hacer seguimiento en tu portal: box.logybox.com
+
+Revisá también en spam, por las dudas.
+
+¡Que llegue pronto! 🚀<button class="cpbtn" onclick="cp(event,'t-postpago')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-seguimiento">
+        <div class="card-hd" onclick="tog('cu-seguimiento')">
+          <div class="ci">🔍</div>
+          <div><div class="ct">Seguimiento de envíos</div><div class="cm">Dónde está el paquete · estado MANIFESTADO</div></div>
+          <div class="cr"><span class="badge b-op">Ops</span><span class="chev" id="cv-cu-seguimiento">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-seguimiento">
+          <div class="tpl" id="t-seguimiento">¡Claro! 🔎 Podés hacer seguimiento de dos formas:
+
+1️⃣ Desde tu portal: box.logybox.com → sección Envíos
+2️⃣ Revisando los correos de alertas@logybox.com (también revisá en spam)
+
+📦 Estado MANIFESTADO = tu paquete salió de Miami y va en vuelo hacia Colombia ✈️<button class="cpbtn" onclick="cp(event,'t-seguimiento')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-taxes">
+        <div class="card-hd" onclick="tog('cu-taxes')">
+          <div class="ci">🧾</div>
+          <div><div class="ct">Devolución de taxes</div><div class="cm">Depende de la tienda · certificado gratuito</div></div>
+          <div class="cr"><span class="badge b-nm">Normativo</span><span class="chev" id="cv-cu-taxes">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-taxes">
+          <div class="tpl" id="t-taxes">¡Buena pregunta! 🧾 La devolución de taxes depende siempre de la tienda donde comprés — no del casillero.
+
+Lo que sí hacemos nosotros es darte el certificado de dirección libre de impuestos. Pedíselo aquí mismo por WhatsApp.
+
+Con ese certificado:
+📩 Contactás a la tienda antes o después de comprar
+🗣️ Les indicás que tu dirección es libre de impuestos
+✅ Ellos te explican si aplica la devolución
+
+Referencias:
+• Apple → sí devuelve taxes 🔗 https://logybox.com/beneficios-de-comprar-en-apple-y-enviar-a-nuestro-casillero-sin-impuestos/
+• Amazon → proceso antes de comprar para que tu cuenta quede exenta
+• Algunas tiendas no aplican devolución
+
+¿Necesitás el certificado ahora? 😊<button class="cpbtn" onclick="cp(event,'t-taxes')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-cobro">
+        <div class="card-hd" onclick="tog('cu-cobro')">
+          <div class="ci">⚖️</div>
+          <div><div class="ct">Cobro mínimo</div><div class="cm">5 lbs · $2.30/lb · Total: ~USD $23.50</div></div>
+          <div class="cr"><span class="badge b-nm">Normativo</span><span class="chev" id="cv-cu-cobro">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-cobro">
+          <div class="tpl" id="t-cobro">Nuestro cobro mínimo es de 5 lbs.
+
+💰 Desglose del envío mínimo (5 lbs):
+• Flete: 5 × $2.30 = $11.50
+• Recargo aerolínea: 5 × $0.40 = $2.00
+• Import Fee: $5.00
+• Seguro básico: $5.00
+👉 TOTAL mínimo: USD $23.50
+
+💡 Tip: aprovechá las 5 lbs al máximo enviando varios productos juntos — así el costo por artículo te rinde más.
+
+Por ejemplo, unos zapatos pesan 1.5 a 2 lbs, así que aún tenés espacio para agregar más cosas. 😊
+
+💡 Calculá tu envío exacto en: logybox.com/calculadora<button class="cpbtn" onclick="cp(event,'t-cobro')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cu-normativa">
+        <div class="card-hd" onclick="tog('cu-normativa')">
+          <div class="ci">📜</div>
+          <div><div class="ct">Normativa 2026 — IVA y aranceles</div><div class="cm">Vigente desde enero 2026</div></div>
+          <div class="cr"><span class="badge b-nm">Normativo</span><span class="chev" id="cv-cu-normativa">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cu-normativa">
+          <div class="g2" style="margin-top:10px">
+            <div class="mc" style="grid-column:span 2"><div class="ml">🇺🇸 USA — hasta USD $200</div><div class="mv">0% impuestos ✅</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">🇺🇸 USA — más de USD $200</div><div class="mv">30% (IVA + arancel)</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">🇨🇳 China — menos de USD $200</div><div class="mv">19% IVA</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">🇨🇳 China — más de USD $200</div><div class="mv">30% (IVA + arancel)</div></div>
+            <div class="mc"><div class="ml">💻 Laptop hasta $560 USD</div><div class="mv">0%</div></div>
+            <div class="mc"><div class="ml">💻 Laptop más de $560 USD</div><div class="mv">19%</div></div>
+            <div class="mc"><div class="ml">📱 Celular/tablet hasta $230</div><div class="mv">0%</div></div>
+            <div class="mc"><div class="ml">📱 Celular/tablet más de $230</div><div class="mv">19%</div></div>
+          </div>
+          <div class="tpl" id="t-normativa">📌 Impuestos al recibir en Colombia (Tráfico Postal / Courier):
+
+🇺🇸 Envíos desde USA:
+• Hasta USD $200 declarado → 0% impuestos ✅
+• Más de USD $200 → 30% (IVA + arancel)
+• Laptops hasta $560 USD → 0%
+• Laptops más de $560 USD → 19%
+• Celulares/tablets hasta $230 USD → 0%
+• Celulares/tablets más de $230 USD → 19%
+
+🇨🇳 Envíos desde China:
+• Menos de USD $200 declarado → 19% IVA
+• Más de USD $200 → 30% (IVA + arancel)
+
+💡 Consejo: si tu compra supera los $200 USD desde USA, consultanos antes para orientarte. Para China, siempre hay impuesto desde el primer dólar.
+
+Más info: logybox.com/impuestos-aranceles-colombia-dian<button class="cpbtn" onclick="cp(event,'t-normativa')">Copiar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CHINA ========== -->
+    <div class="sec" id="sec-china">
+      <div class="chips">
+        <div class="chip" onclick="openC('cc-flujo-1')">1️⃣ Apertura / segmentar</div>
+        <div class="chip" onclick="openC('cc-flujo-2a')">2A AliEx/Shein → USA</div>
+        <div class="chip" onclick="openC('cc-flujo-2b')">2B Alibaba</div>
+        <div class="chip" onclick="openC('cc-flujo-2c')">2C Proveedor propio</div>
+        <div class="chip" onclick="openC('cc-flujo-3')">3️⃣ Recomendar ruta</div>
+        <div class="chip" onclick="openC('cc-flujo-4')">4️⃣ Dar dirección</div>
+        <div class="chip" onclick="openC('cc-flujo-5')">5️⃣ Seguimiento</div>
+        <div class="chip" onclick="openC('cc-primer-contacto')">Primer contacto</div>
+        <div class="chip" onclick="openC('cc-cotizacion')">Cotización</div>
+        <div class="chip" onclick="openC('cc-asesor-felipe')">Asesor Felipe</div>
+        <div class="chip" onclick="openC('cc-redireccion')">Redirección WA</div>
+        <div class="chip" onclick="openC('cc-bodegas')">Bodegas</div>
+        <div class="chip" onclick="openC('cc-modalidades')">Modalidades</div>
+      </div>
+
+      <div class="card" id="cc-primer-contacto">
+        <div class="card-hd" onclick="tog('cc-primer-contacto')">
+          <div class="ci">🇨🇳</div>
+          <div><div class="ct">Primer contacto — cliente China</div><div class="cm">Bienvenida y presentación del servicio</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-primer-contacto">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-primer-contacto">
+          <div class="tpl" id="t-china-bv">¡Hola! Bienvenido a LogyBox 👋
+Si estás buscando traer mercancía desde China a Colombia, estás en el lugar correcto.
+
+🔹 Ofrecemos envíos seguros y rentables para negocios.
+🔹 Contamos con 2 opciones logísticas:
+
+1️⃣ Ruta triangulada: China → EE.UU. por barco + EE.UU. → Colombia por avión.
+2️⃣ Ruta directa: China → Colombia por barco (desde 0.5 m³).
+
+📦 También ofrecemos servicio de inspección y control de calidad.
+
+💻 Desde nuestra plataforma puedes:
+• Hacer seguimiento a tus paquetes
+• Reportar pagos
+• Recibir asesoría personalizada
+
+Tu asesor para servicios desde China es Felipe.
+Podés contactarlo directamente aquí 👉 https://wa.link/eci8k3<button class="cpbtn" onclick="cp(event,'t-china-bv')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-cotizacion">
+        <div class="card-hd" onclick="tog('cc-cotizacion')">
+          <div class="ci">📊</div>
+          <div><div class="ct">Solicitar cotización China</div><div class="cm">Datos necesarios para cotizar</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-cotizacion">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-cotizacion">
+          <div class="al al-w" style="margin-top:10px">Siempre pedir los datos ANTES de dar dirección de bodega o cotizar.</div>
+          <div class="tpl" id="t-cotizacion">📦 Para cotizar tu envío desde China, necesitamos esta info:
+• Peso estimado (en kg)
+• Medidas del empaque (alto, largo, ancho en cm)
+• Tipo de producto o contenido
+• Cantidades aproximadas
+• Valor declarado de la mercancía
+
+Con eso te damos una cotización precisa y te ayudamos a elegir la mejor opción para que ahorres 🚀
+
+💡 ¿Prefieres calcularlo tú mismo?
+Usá nuestra calculadora aquí 👉 https://logybox.com/calculadora/#calcular<button class="cpbtn" onclick="cp(event,'t-cotizacion')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-asesor-felipe">
+        <div class="card-hd" onclick="tog('cc-asesor-felipe')">
+          <div class="ci">👨‍💼</div>
+          <div><div class="ct">Asignar asesor China — Felipe</div><div class="cm">Cuando el cliente necesita atención especializada China</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-asesor-felipe">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-asesor-felipe">
+          <div class="tpl" id="t-felipe">¡Hola! 👋
+Ya asignamos un asesor especializado en servicios desde China. Su nombre es Felipe y estará encantado de ayudarte.
+
+Para una atención más rápida, te recomendamos contactarlo directamente por WhatsApp:
+👉 https://wa.link/eci8k3<button class="cpbtn" onclick="cp(event,'t-felipe')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-redireccion">
+        <div class="card-hd" onclick="tog('cc-redireccion')">
+          <div class="ci">🔀</div>
+          <div><div class="ct">Redirección al asesor WhatsApp</div><div class="cm">Para China y USA cuando se necesita atención comercial</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-redireccion">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-redireccion">
+          <div class="slbl">Redirección China</div>
+          <div class="tpl" id="t-redir-china">¡Hola! 👋
+Para darte una atención más ágil y personalizada sobre compras o envíos desde China, te invitamos a hablar directamente con nuestro asesor comercial por WhatsApp.
+
+Solo haz clic aquí 👉 https://wa.link/eci8k3<button class="cpbtn" onclick="cp(event,'t-redir-china')">Copiar</button></div>
+          <div class="slbl">Redirección USA</div>
+          <div class="tpl" id="t-redir-usa">¡Hola! 👋
+Para darte una atención más ágil y personalizada sobre compras o envíos desde USA, te invitamos a hablar directamente con nuestro asesor comercial por WhatsApp.
+
+Solo haz clic aquí 👉 https://wa.link/eci8k3<button class="cpbtn" onclick="cp(event,'t-redir-usa')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-bodegas">
+        <div class="card-hd" onclick="tog('cc-bodegas')">
+          <div class="ci">🏭</div>
+          <div><div class="ct">Direcciones bodegas China</div><div class="cm">Guangzhou (triangulada) · Yiwu (directa Colombia)</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-bodegas">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-bodegas">
+          <div class="slbl">Guangzhou — Ruta triangulada (China → Miami → Colombia)</div>
+          <div class="addr" id="t-dir-gz">广州市白云区江夏学校北路1号尚龙大厦A519
+赖华平 13632458039
+
+⚠️ Pedir al proveedor marcar caja con código LBX-###<button class="cpbtn" onclick="cp(event,'t-dir-gz')">Copiar</button></div>
+          <div class="slbl">Yiwu — Ruta directa (China → Colombia · solo marítimo)</div>
+          <div class="addr" id="t-dir-yw">浙江省义乌市廿三里宝元路3号3栋1楼北1-D
+Guilia 高娅君 — Tel: 15057961291
+
+Cobro mínimo: 0.5 m³ · Tiempo: 60-70 días
+⚠️ Pedir al proveedor marcar caja con código LBX-####<button class="cpbtn" onclick="cp(event,'t-dir-yw')">Copiar</button></div>
+          <div class="al al-w">Para Yiwu: llenar lista de empaque + solicitar recibo blanco de bodega. Pago 50% antes · 50% al llegar a Bogotá.</div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-modalidades">
+        <div class="card-hd" onclick="tog('cc-modalidades')">
+          <div class="ci">🚢</div>
+          <div><div class="ct">Modalidades de envío China</div><div class="cm">Ruta triangulada y ruta directa</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-modalidades">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-modalidades">
+          <div class="al al-i" style="margin-top:10px">
+            <strong>RUTA TRIANGULADA — China → USA → Colombia</strong><br>
+            Proveedor despacha a Guangzhou → LOGYBOX consolida → envía a Miami → cliente despacha a Colombia.<br>
+            • Express a Miami: 10-12 días<br>
+            • Marítimo a Miami: 30-40 días<br><br>
+            <strong>RUTA DIRECTA — China → Colombia</strong><br>
+            Solo desde Yiwu, marítimo consolidado directo a Bogotá.<br>
+            • Tiempo: 60-70 días · Mínimo 0.5 m³
+          </div>
+          <div class="g2">
+            <div class="mc"><div class="ml">Express triangulada</div><div class="mv">→ Miami · 10-12 días</div></div>
+            <div class="mc"><div class="ml">Marítimo triangulada</div><div class="mv">→ Miami · 30-40 días</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">Directa Yiwu</div><div class="mv">→ Bogotá · 60-70 días · mín 0.5 m³</div></div>
+          </div>
+          <div class="al al-w">Se cobra el mayor entre peso real y peso volumétrico. Cotización = estimado, valor final puede variar. · 1 mes bodegaje gratis en Guangzhou · Sin costo consolidación.</div>
+        </div>
+      </div>
+
+      <div class="card" id="cc-datos-carga">
+        <div class="card-hd" onclick="tog('cc-datos-carga')">
+          <div class="ci">📋</div>
+          <div><div class="ct">Pedir datos de carga al cliente</div><div class="cm">4 datos obligatorios antes de cotizar</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-datos-carga">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-datos-carga">
+          <div class="tpl" id="t-datos-carga">¡Perfecto! Para darte la dirección de bodega y cotizarte el envío, necesito estos datos de tu carga:
+
+📦 Peso de empaque (kg)
+📐 Medidas del empaque: largo × ancho × alto (cm)
+📦 Cantidad de cajas
+💰 Valor total de la carga (USD)
+
+Con eso te explico la modalidad más conveniente y los pasos para que tu proveedor despache. 😊<button class="cpbtn" onclick="cp(event,'t-datos-carga')">Copiar</button></div>
+        </div>
+      </div>
+    </div>
+
+      <!-- FLUJO CHINA ETAPA 1 — Primera pregunta -->
+      <div class="card" id="cc-flujo-1">
+        <div class="card-hd" onclick="tog('cc-flujo-1')">
+          <div class="ci">1️⃣</div>
+          <div><div class="ct">Etapa 1 — Cliente dice: "quiero info sobre China"</div><div class="cm">Primer mensaje · segmentar tipo de cliente</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-1">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-1">
+          <div class="al al-i" style="margin-top:10px">Antes de dar info, identificar si es <strong>comprador en plataformas</strong> o tiene <strong>proveedor propio</strong>. De eso depende todo lo demás.</div>
+          <div class="slbl">Mensaje de apertura — segmentar tipo de cliente</div>
+          <div class="tpl" id="t-china-apertura">¡Hola! Bienvenido a LogyBox 👋
+
+Claro, con gusto te cuento cómo funciona el servicio desde China.
+
+Antes de explicarte, necesito entender un poco mejor tu situación para darte la info más útil:
+
+¿Cómo estás comprando o pensás comprar?
+
+A) Comprás en plataformas como AliExpress, Shein, Temu
+B) Comprás directo en Alibaba
+C) Tenés tu propio proveedor en China (fábrica, contacto directo, 1688)
+
+¿Cuál se acerca más a tu caso? 😊<button class="cpbtn" onclick="cp(event,'t-china-apertura')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 2A — Es plataforma (AliExpress/Shein/Temu) -->
+      <div class="card" id="cc-flujo-2a">
+        <div class="card-hd" onclick="tog('cc-flujo-2a')">
+          <div class="ci">2️⃣</div>
+          <div><div class="ct">Etapa 2A — Compra en AliExpress / Shein / Temu</div><div class="cm">→ Redirigir a casillero USA</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cc-flujo-2a">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-2a">
+          <div class="al al-ok" style="margin-top:10px">AliExpress, Shein y Temu envían internacionalmente — no necesitan bodega en China. Usar casillero USA.</div>
+          <div class="tpl" id="t-china-plat">¡Perfecto! Para AliExpress, Shein y Temu no necesitás una bodega en China — estas plataformas hacen el envío internacional directamente.
+
+Lo que hacés es usar tu casillero en Miami (USA):
+📦 Registrate gratis y te damos una dirección en Miami
+👉 https://registro.logybox.com/?referred=MKT
+
+Cuando comprás en AliExpress, Shein o Temu, en el campo de dirección de envío ponés la dirección de Miami + tu código LBX que te asignamos.
+
+El paquete llega a Miami, nosotros lo recibimos y lo enviamos a Colombia en 5 días hábiles promedio.
+
+¿Ya tenés tu casillero activo o querés que te ayude a abrirlo? 😊<button class="cpbtn" onclick="cp(event,'t-china-plat')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 2B — Compra en Alibaba -->
+      <div class="card" id="cc-flujo-2b">
+        <div class="card-hd" onclick="tog('cc-flujo-2b')">
+          <div class="ci">2️⃣</div>
+          <div><div class="ct">Etapa 2B — Compra en Alibaba</div><div class="cm">→ Validar si el proveedor envía internacionalmente</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-2b">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-2b">
+          <div class="al al-w" style="margin-top:10px">En Alibaba hay dos casos: el proveedor puede enviar internacionalmente (→ USA) o solo dentro de China (→ casillero China). Hay que validar.</div>
+          <div class="tpl" id="t-china-alibaba">Entendido, Alibaba es una excelente opción 👍
+
+Una pregunta importante: ¿El proveedor que encontraste en Alibaba ofrece envío internacional (es decir, puede mandarlo directamente fuera de China) o solo despacha dentro de China?
+
+• Si envía internacionalmente → usamos tu casillero en Miami (más rápido y sencillo)
+• Si solo envía dentro de China → usamos nuestra bodega en China y nosotros lo traemos
+
+¿Pudiste confirmar eso con el proveedor? 😊<button class="cpbtn" onclick="cp(event,'t-china-alibaba')">Copiar</button></div>
+          <div class="slbl">Si el proveedor Alibaba SÍ envía internacionalmente → redirigir a USA</div>
+          <div class="tpl" id="t-alibaba-intl">¡Perfecto! Si tu proveedor de Alibaba hace envío internacional, usás el casillero USA (Miami).
+
+Le das esta dirección al proveedor como destino del despacho:
+📦 6900 NW 46th Street, Miami - Florida 33166
+Tel: +1 (305) 507-8635 + TU CÓDIGO LBX
+
+El código LBX te llega cuando te registrás en: https://registro.logybox.com/?referred=MKT
+
+Una vez que el paquete llega a Miami, lo despachamos a Colombia. ¿Ya tenés tu casillero activo? 😊<button class="cpbtn" onclick="cp(event,'t-alibaba-intl')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 2C — Proveedor propio / 1688 -->
+      <div class="card" id="cc-flujo-2c">
+        <div class="card-hd" onclick="tog('cc-flujo-2c')">
+          <div class="ci">2️⃣</div>
+          <div><div class="ct">Etapa 2C — Proveedor propio / 1688 / fábrica directa</div><div class="cm">→ Casillero China · pedir info del producto</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-2c">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-2c">
+          <div class="al al-i" style="margin-top:10px">Confirmado que necesita casillero China. Siguiente paso: entender el producto para recomendar la mejor ruta y modalidad.</div>
+          <div class="tpl" id="t-china-proveedor">¡Genial! Para ese tipo de operación tenemos el servicio ideal.
+
+Tu proveedor despacha la mercancía a nuestra bodega en China, nosotros la consolidamos y la enviamos a Colombia.
+
+Para recomendarte la mejor opción necesito saber un poco más sobre tu carga:
+
+📦 ¿Qué tipo de producto o mercancía vas a importar?
+📦 ¿Tenés una idea aproximada del peso total y las cantidades?
+💰 ¿Cuál es el valor aproximado de la mercancía (USD)?
+
+Con eso te explico cuál ruta conviene más para tu caso. 😊<button class="cpbtn" onclick="cp(event,'t-china-proveedor')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 3 — Analizar el producto y recomendar ruta -->
+      <div class="card" id="cc-flujo-3">
+        <div class="card-hd" onclick="tog('cc-flujo-3')">
+          <div class="ci">3️⃣</div>
+          <div><div class="ct">Etapa 3 — Analizar producto y recomendar ruta</div><div class="cm">Con la info del cliente, definir la modalidad más acertada</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-3">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-3">
+          <div class="al al-i" style="margin-top:10px">
+            <strong>Criterios para recomendar ruta:</strong><br>
+            • Carga pequeña / urgente / menor 50kg → Ruta Triangulada Express (Guangzhou → Miami · 10-12 días)<br>
+            • Carga mediana sin urgencia → Ruta Triangulada Marítimo (Guangzhou → Miami · 30-40 días)<br>
+            • Carga grande / más de 0.5 m³ / no urgente → Ruta Directa (Yiwu → Bogotá · 60-70 días)<br>
+            • Siempre pedir los 4 datos antes de dar dirección
+          </div>
+          <div class="slbl">Mensaje cuando ya tiene info del producto — pedir datos exactos</div>
+          <div class="tpl" id="t-china-pedir-datos">¡Gracias por la info! Ya tengo una idea más clara de tu carga.
+
+Para darte la cotización exacta y la dirección de bodega donde tu proveedor debe despachar, necesito estos datos precisos:
+
+📦 Peso de empaque (kg)
+📐 Medidas del empaque: largo × ancho × alto (cm)
+📦 Cantidad de cajas o bultos
+💰 Valor total de la mercancía (USD)
+
+Con eso te doy la cotización y te explico paso a paso cómo coordinar con tu proveedor. 😊<button class="cpbtn" onclick="cp(event,'t-china-pedir-datos')">Copiar</button></div>
+          <div class="slbl">Cuando ya tiene todos los datos — presentar las rutas</div>
+          <div class="tpl" id="t-china-rutas">¡Perfecto! Con esos datos ya puedo orientarte.
+
+Para tu carga tenemos dos opciones:
+
+1️⃣ RUTA TRIANGULADA — China → Miami → Colombia
+Tu proveedor despacha a nuestra bodega en Guangzhou, nosotros enviamos a Miami y desde allí a Colombia.
+📦 Express: 10-12 días a Miami
+🚢 Marítimo: 30-40 días a Miami
+
+2️⃣ RUTA DIRECTA — China → Colombia (desde 0.5 m³)
+Desde Yiwu, marítimo consolidado directo a Bogotá.
+🚢 Tiempo: 60-70 días
+
+¿Cuál se ajusta mejor a tu urgencia y presupuesto? Cuéntame y te doy la dirección de bodega exacta y los pasos para coordinar con tu proveedor. 😊<button class="cpbtn" onclick="cp(event,'t-china-rutas')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 4 — Dar dirección y coordinar con proveedor -->
+      <div class="card" id="cc-flujo-4">
+        <div class="card-hd" onclick="tog('cc-flujo-4')">
+          <div class="ci">4️⃣</div>
+          <div><div class="ct">Etapa 4 — Dar dirección y coordinar con proveedor</div><div class="cm">Instrucciones completas para el despacho</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-4">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-4">
+          <div class="slbl">Ruta Triangulada — Bodega Guangzhou</div>
+          <div class="tpl" id="t-china-instruc-gz">¡Listo! Para la ruta triangulada, tu proveedor debe despachar a esta dirección:
+
+📍 广州市白云区江夏学校北路1号尚龙大厦A519
+Contacto: 赖华平 · Tel: 13632458039
+
+📋 Instrucciones para tu proveedor:
+✅ Marcar las cajas con tu código LBX-#### (te llega en tu portal)
+✅ Incluir la lista de contenido / packing list
+✅ Declarar el valor real de la mercancía
+
+Una vez que la carga llegue a nuestra bodega en China, te avisamos y comenzamos el proceso de envío a Miami.
+
+¿Hay algo más que necesites aclarar antes de que tu proveedor despache? 😊<button class="cpbtn" onclick="cp(event,'t-china-instruc-gz')">Copiar</button></div>
+          <div class="slbl">Ruta Directa — Bodega Yiwu</div>
+          <div class="tpl" id="t-china-instruc-yw">¡Listo! Para la ruta directa China → Colombia, tu proveedor debe despachar a:
+
+📍 浙江省义乌市廿三里宝元路3号3栋1楼北1-D
+Contacto: Guilia 高娅君 · Tel: 15057961291
+
+📋 Instrucciones para tu proveedor:
+✅ Marcar las cajas con tu código LBX-#### (te llega en tu portal)
+✅ Llenar la lista de empaque (packing list) antes de despachar
+✅ Solicitar y enviar el recibo blanco de bodega
+✅ Declarar el valor real de la mercancía
+
+💳 Forma de pago: 50% antes del despacho · 50% al llegar la carga a Bogotá
+
+⏱️ Tiempo estimado: 60-70 días hasta Bogotá
+
+¿Alguna duda antes de coordinar con tu proveedor? 😊<button class="cpbtn" onclick="cp(event,'t-china-instruc-yw')">Copiar</button></div>
+        </div>
+      </div>
+
+      <!-- FLUJO CHINA ETAPA 5 — Seguimiento y cierre -->
+      <div class="card" id="cc-flujo-5">
+        <div class="card-hd" onclick="tog('cc-flujo-5')">
+          <div class="ci">5️⃣</div>
+          <div><div class="ct">Etapa 5 — Seguimiento de la carga China</div><div class="cm">Una vez el proveedor despachó</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cc-flujo-5">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cc-flujo-5">
+          <div class="tpl" id="t-china-seguimiento">¡Listo! Una vez que tu proveedor despache a la bodega, el proceso sigue así:
+
+📦 1. Recibimos la carga en bodega China y te notificamos
+📊 2. Verificamos peso y medidas para la liquidación final
+✈️ 3. Enviamos a Miami (o directo a Bogotá si elegiste ruta directa)
+📧 4. Te enviamos los estados del envío por correo
+📱 5. Podés hacer seguimiento desde tu portal: china.logybox.com
+
+Si surge alguna novedad en el proceso, te avisamos de inmediato.
+
+¿Tenés alguna pregunta sobre el proceso o necesitás que te conecte con nuestro asesor especializado Felipe?
+👉 https://wa.link/eci8k3 😊<button class="cpbtn" onclick="cp(event,'t-china-seguimiento')">Copiar</button></div>
+        </div>
+      </div>
+
+        <!-- ========== ATENCIÓN ========== -->
+    <div class="sec" id="sec-atencion">
+      <div class="chips">
+        <div class="chip" onclick="openC('ca-frustrado')">Cliente frustrado</div>
+        <div class="chip" onclick="openC('ca-despedida')">Despedida</div>
+        <div class="chip" onclick="openC('ca-feedback')">Reseña Google</div>
+        <div class="chip" onclick="openC('ca-espera')">Mensaje espera</div>
+        <div class="chip" onclick="openC('ca-no-solucion')">Sin solución</div>
+        <div class="chip" onclick="openC('ca-lucho')">Lucho / horario</div>
+      </div>
+
+      <div class="card" id="ca-frustrado">
+        <div class="card-hd" onclick="tog('ca-frustrado')">
+          <div class="ci">😤</div>
+          <div><div class="ct">Cliente frustrado / molesto</div><div class="cm">Empatizar → explicar → acción concreta</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ca-frustrado">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-frustrado">
+          <div class="al al-w" style="margin-top:10px">Estructura siempre: 1) Empatizar → 2) Explicar → 3) Acción concreta.</div>
+          <div class="slbl">Apertura de empatía</div>
+          <div class="tpl" id="t-frust1">Con toda la razón, mij@ — esperar sin saber qué pasa con tu paquete es desesperante. Te cuento exactamente qué está pasando y qué viene...<button class="cpbtn" onclick="cp(event,'t-frust1')">Copiar</button></div>
+          <div class="slbl">Frases de empatía</div>
+          <div class="tpl" id="t-frust2">• "Entiendo que esto es frustrante"
+• "Con toda la razón te sentís así"
+• "Si yo estuviera en tu lugar también estaría preocupado"
+• "De verdad entiendo tu preocupación, vamos a resolverlo juntos"
+• "Tenés toda la razón, eso no debería haber pasado"<button class="cpbtn" onclick="cp(event,'t-frust2')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="ca-despedida">
+        <div class="card-hd" onclick="tog('ca-despedida')">
+          <div class="ci">🙌</div>
+          <div><div class="ct">Despedidas — cierre de chat</div><div class="cm">Atajo B2Chat: /despedida</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ca-despedida">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-despedida">
+          <div class="slbl">Estándar (/despedida)</div>
+          <div class="tpl" id="t-desp1">Si hay algo adicional en que pueda ayudarte, me contás. ¡Que tengas un feliz resto de día!<button class="cpbtn" onclick="cp(event,'t-desp1')">Copiar</button></div>
+          <div class="slbl">Cálida</div>
+          <div class="tpl" id="t-desp2">¡Listo pues! 🙌 Si necesitás algo más, ya sabés que estamos a un mensaje. ¡Que te vaya muy bien! — El equipo LogyBox<button class="cpbtn" onclick="cp(event,'t-desp2')">Copiar</button></div>
+          <div class="slbl">Post conversación difícil</div>
+          <div class="tpl" id="t-desp3">Gracias por la paciencia, mij@ — de verdad. Quedamos muy atentos y esperamos que todo se resuelva pronto. ¡Buen día!<button class="cpbtn" onclick="cp(event,'t-desp3')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="ca-feedback">
+        <div class="card-hd" onclick="tog('ca-feedback')">
+          <div class="ci">⭐</div>
+          <div><div class="ct">Invitación reseña Google (/feedback)</div><div class="cm">Solo con satisfacción espontánea del cliente</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ca-feedback">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-feedback">
+          <div class="al al-ok" style="margin-top:10px">Solo cuando el cliente dice que quedó feliz con su paquete recibido. NO usar después de quejas.</div>
+          <div class="tpl" id="t-feedback">¡Qué bueno que te gustó nuestro servicio! El feedback es oro para nosotros. ¿Qué tal si nos apoyás dejando tu calificación en Google? 🌟
+
+👉 https://share.google/yKIgAhAJaOYuHvepL
+
+¡Te lo agradecería un montón!<button class="cpbtn" onclick="cp(event,'t-feedback')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="ca-espera">
+        <div class="card-hd" onclick="tog('ca-espera')">
+          <div class="ci">⏳</div>
+          <div><div class="ct">Mensaje de espera</div><div class="cm">Cuando necesitás tiempo para revisar</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ca-espera">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-espera">
+          <div class="tpl" id="t-espera">Listo, ya estoy mirando tu caso — en unos minutos te cuento. 👀<button class="cpbtn" onclick="cp(event,'t-espera')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="ca-no-solucion">
+        <div class="card-hd" onclick="tog('ca-no-solucion')">
+          <div class="ci">💡</div>
+          <div><div class="ct">Cuando no hay solución inmediata</div><div class="cm">Siempre terminar con lo que SÍ se puede</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ca-no-solucion">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-no-solucion">
+          <div class="tpl" id="t-nosol">Entiendo perfectamente tu situación, mij@. En este momento [SITUACIÓN], pero lo que sí podemos hacer es [darte seguimiento / escalar el caso / avisarte cuando haya novedad]. Quedamos muy atentos. 🙏<button class="cpbtn" onclick="cp(event,'t-nosol')">Copiar</button></div>
+        </div>
+      </div>
+
+      <div class="card" id="ca-lucho">
+        <div class="card-hd" onclick="tog('ca-lucho')">
+          <div class="ci">🤖</div>
+          <div><div class="ct">Lucho — fuera de horario</div><div class="cm">Mensaje automático del bot</div></div>
+          <div class="cr"><span class="badge b-gn">General</span><span class="chev" id="cv-ca-lucho">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ca-lucho">
+          <div class="al al-r" style="margin-top:10px">Ponerse OFFLINE antes de las 5:00 pm todos los días para que este mensaje se active automáticamente.</div>
+          <div class="tpl" id="t-lucho">¡Ey! 👋 Ya estoy fuera del aire por hoy (recargando pilas 😴), pero no te preocupes, en cuanto esté de regreso leo tu mensaje y te respondo.
+
+Horarios de atención:
+Lunes a viernes: 8:00 a.m. – 5:00 p.m.
+Sábados: 8:00 a.m. – 10:00 a.m.
+
+Nos hablamos pronto,
+El equipo LogyBox 🚀<button class="cpbtn" onclick="cp(event,'t-lucho')">Copiar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== INFO RÁPIDA ========== -->
+    <div class="sec" id="sec-info">
+      <div class="card" id="ci-dir-usa">
+        <div class="card-hd" onclick="tog('ci-dir-usa')">
+          <div class="ci">📍</div>
+          <div><div class="ct">Dirección casillero Miami (USA)</div><div class="cm">Incluir siempre código LBX del cliente</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-ci-dir-usa">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ci-dir-usa">
+          <div class="addr" id="t-dir-usa" style="margin-top:10px">6900 NW 46th Street
+Miami, Florida 33166
+Tel: +1 (305) 507-8635
++ CÓDIGO LBX (ej: LBX-1234)<button class="cpbtn" onclick="cp(event,'t-dir-usa')">Copiar</button></div>
+          <div class="al al-w">El código LBX lo ve el cliente en su portal (box.logybox.com). Obligatorio siempre.</div>
+        </div>
+      </div>
+
+      <div class="card" id="ci-vip">
+        <div class="card-hd" onclick="tog('ci-vip')">
+          <div class="ci">⭐</div>
+          <div><div class="ct">Clientes VIP — B2Chat</div><div class="cm">Solo para casillero USA</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-ci-vip">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ci-vip">
+          <div class="g2" style="margin-top:10px">
+            <div class="mc"><div class="ml">⭐ VIP</div><div class="mv">Alta prioridad · USA</div></div>
+            <div class="mc"><div class="ml">Cliente USA</div><div class="mv">Prioridad normal</div></div>
+            <div class="mc"><div class="ml">Cliente China</div><div class="mv">Prioridad normal</div></div>
+            <div class="mc"><div class="ml">Sin asignación</div><div class="mv">Solo prospectos</div></div>
+          </div>
+          <div class="al al-r">No asignes departamento a prospectos. Si lo hacés, al volver no pasan por el menú y quedan sin atención.</div>
+        </div>
+      </div>
+
+      <div class="card" id="ci-tarifas">
+        <div class="card-hd" onclick="tog('ci-tarifas')">
+          <div class="ci">💰</div>
+          <div><div class="ct">Tarifas completas USA · Servicios adicionales</div><div class="cm">Directamente de logybox.com/tarifas</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-ci-tarifas">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ci-tarifas">
+          <div class="slbl">Casillero USA → Colombia</div>
+          <div class="g2" style="margin-top:6px">
+            <div class="mc"><div class="ml">Flete</div><div class="mv">$2.20 USD/lb</div></div>
+            <div class="mc"><div class="ml">Mínimo</div><div class="mv">5 lbs</div></div>
+            <div class="mc"><div class="ml">Seguro básico</div><div class="mv">$5 USD (cubre $100)</div></div>
+            <div class="mc"><div class="ml">Seguro total</div><div class="mv">5% del valor</div></div>
+            <div class="mc"><div class="ml">Import Fee</div><div class="mv">$5 o $0.25/lb</div></div>
+            <div class="mc"><div class="ml">Recargo aerolínea</div><div class="mv">$0.40/lb (mín. 5 lbs)</div></div>
+            <div class="mc"><div class="ml">Consolidación</div><div class="mv">GRATIS</div></div>
+            <div class="mc"><div class="ml">Bodegaje 1 mes</div><div class="mv">GRATIS</div></div>
+            <div class="mc" style="grid-column:span 2"><div class="ml">Sin recargo volumétrico en USA</div><div class="mv">✅</div></div>
+          </div>
+          <div class="slbl">Servicios especiales USA</div>
+          <div class="g2">
+            <div class="mc"><div class="ml">Celular/tablet (hasta $230)</div><div class="mv">$35 + seguro</div></div>
+            <div class="mc"><div class="ml">Celular/tablet (desde China)</div><div class="mv">$75 por ítem</div></div>
+            <div class="mc"><div class="ml">Laptop USA (hasta $560)</div><div class="mv">$65 + seguro</div></div>
+            <div class="mc"><div class="ml">Laptop China (hasta $560)</div><div class="mv">$125 por ítem</div></div>
+            <div class="mc"><div class="ml">Re-empaque</div><div class="mv">Gratis / $5 caja nueva</div></div>
+            <div class="mc"><div class="ml">Envío documentos Miami</div><div class="mv">$15 USD</div></div>
+            <div class="mc"><div class="ml">Menaje USA (marítimo)</div><div class="mv">$18/pie³ (mín 5.25)</div></div>
+            <div class="mc"><div class="ml">Compramos por ti USA</div><div class="mv">10% del valor (mín. $10)</div></div>
+            <div class="mc"><div class="ml">Compramos por ti China</div><div class="mv">$50 o 10% (mayor)</div></div>
+            <div class="mc"><div class="ml">Búsqueda proveedor</div><div class="mv">$100 USD</div></div>
+            <div class="mc"><div class="ml">Negociación con proveedor</div><div class="mv">$200 o 10% FOB</div></div>
+            <div class="mc"><div class="ml">Inspección en China</div><div class="mv">$399 USD/día</div></div>
+          </div>
+          <div class="al al-i">China: tarifas cambian constantemente. Siempre solicitar cotización al asesor según peso, volumen y producto. Contactar a Felipe: wa.link/eci8k3</div>
+        </div>
+      </div>
+
+      <div class="card" id="ci-portal">
+        <div class="card-hd" onclick="tog('ci-portal')">
+          <div class="ci">🌐</div>
+          <div><div class="ct">Links y portales LOGYBOX</div></div>
+          <div class="cr"><span class="badge b-gn">General</span><span class="chev" id="cv-ci-portal">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-ci-portal">
+          <div class="slbl">Links principales</div>
+          <ul class="ilist" style="margin-top:5px">
+            <li><strong>Registro:</strong> registro.logybox.com/?referred=MKT</li>
+            <li><strong>Web:</strong> logybox.com</li>
+            <li><strong>Portal USA:</strong> box.logybox.com</li>
+            <li><strong>Portal China:</strong> china.logybox.com</li>
+            <li><strong>Calculadora:</strong> logybox.com/calculadora/#calcular</li>
+            <li><strong>Asesor Felipe (China):</strong> wa.link/eci8k3</li>
+            <li><strong>Instagram:</strong> @logy.box</li>
+            <li><strong>TikTok:</strong> Logy.box</li>
+            <li><strong>Reseñas Google:</strong> share.google/yKIgAhAJaOYuHvepL</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FLUJOS ========== -->
+    <div class="sec" id="sec-flujos">
+      <div class="card" id="cf-nuevo">
+        <div class="card-hd" onclick="tog('cf-nuevo')">
+          <div class="ci">🆕</div>
+          <div><div class="ct">Flujo — cliente nuevo USA</div></div>
+          <div class="cr"><span class="badge b-usa">USA</span><span class="chev" id="cv-cf-nuevo">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cf-nuevo">
+          <div class="fs" style="margin-top:10px"><div class="fn">1</div><div class="ft">Leer historial antes de responder</div></div>
+          <div class="fs"><div class="fn">2</div><div class="ft">¿Cliente activo o prospecto?<div class="sm">Activo → asignar departamento · Prospecto → sin asignación</div></div></div>
+          <div class="fs"><div class="fn">3</div><div class="ft">Bienvenida + dirección Miami + código LBX</div></div>
+          <div class="fs"><div class="fn">4</div><div class="ft">Resolver dudas: tiempos, costos, normativa 2026</div></div>
+          <div class="fs"><div class="fn">5</div><div class="ft">Despacho desde el portal<div class="sm">Factura en 2-3h · Esperar siempre la factura</div></div></div>
+          <div class="fs"><div class="fn">6</div><div class="ft">Post-pago → MANIFESTADO = en vuelo a Colombia</div></div>
+          <div class="fs"><div class="fn">7</div><div class="ft">Paquete recibido + feliz → /feedback (si es espontáneo)</div></div>
+          <div class="fs"><div class="fn">8</div><div class="ft">Despedida cálida → cerrar chat</div></div>
+        </div>
+      </div>
+
+      <div class="card" id="cf-china">
+        <div class="card-hd" onclick="tog('cf-china')">
+          <div class="ci">🇨🇳</div>
+          <div><div class="ct">Flujo — cliente China con árbol de decisión</div></div>
+          <div class="cr"><span class="badge b-cn">China</span><span class="chev" id="cv-cf-china">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cf-china">
+          <div class="al al-i" style="margin-top:10px">
+            <strong>AliExpress / Shein / Temu / Alibaba intl</strong> → Casillero USA<br>
+            <strong>Alibaba local / 1688 / proveedor propio</strong> → Casillero China<br>
+            <strong>No sabe</strong> → Preguntar: "¿Tu proveedor envía internacionalmente?"
+          </div>
+          <div class="fs" style="margin-top:8px"><div class="fn">2</div><div class="ft">Pedir 4 datos de carga<div class="sm">Peso · Medidas · Cajas · Valor USD</div></div></div>
+          <div class="fs"><div class="fn">3</div><div class="ft">Cotizar y elegir ruta<div class="sm">Triangulada (Guangzhou → Miami → Colombia) o Directa (Yiwu → Bogotá)</div></div></div>
+          <div class="fs"><div class="fn">4</div><div class="ft">Dar dirección de bodega correcta</div></div>
+          <div class="fs"><div class="fn">5</div><div class="ft">Recordar: marcar cajas con LBX-####</div></div>
+          <div class="fs"><div class="fn">6</div><div class="ft">Yiwu: lista de empaque + recibo blanco de bodega</div></div>
+        </div>
+      </div>
+
+      <div class="card" id="cf-b2chat">
+        <div class="card-hd" onclick="tog('cf-b2chat')">
+          <div class="ci">💬</div>
+          <div><div class="ct">Reglas B2Chat — cierre de chat</div></div>
+          <div class="cr"><span class="badge b-at">Atención</span><span class="chev" id="cv-cf-b2chat">▼</span></div>
+        </div>
+        <div class="card-bd" id="bd-cf-b2chat">
+          <div class="fs" style="margin-top:10px"><div class="fn">1</div><div class="ft"><strong>Asesoramos</strong> — el cliente recibió lo que necesitaba</div></div>
+          <div class="fs"><div class="fn">2</div><div class="ft"><strong>Resolvemos</strong> — situación atendida o cliente sabe qué sigue</div></div>
+          <div class="fs"><div class="fn">3</div><div class="ft"><strong>Despedimos</strong> — mensaje cálido antes de cerrar</div></div>
+          <div class="al al-w">Si el cliente no responde → esperar 1 hora mínimo antes de cerrar.</div>
+          <div class="al al-r">Ponerse OFFLINE antes de las 5:00 pm todos los días sin excepción.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ===== AI PANEL — SMART SEARCH ===== -->
+<div class="ai">
+  <div class="ai-hd">
+    <div class="ai-dot"></div>
+    <div>
+      <div class="ai-ht">Buscador inteligente</div>
+      <div class="ai-hs">Plantillas por contexto del cliente</div>
+    </div>
+  </div>
+
+  <!-- SEGMENT TABS -->
+  <div class="seg-tabs">
+    <div class="stab on" id="st-nuevo" onclick="setSeg('nuevo')">🆕 Nuevo</div>
+    <div class="stab" id="st-usa" onclick="setSeg('usa')">🇺🇸 USA</div>
+    <div class="stab" id="st-china" onclick="setSeg('china')">🇨🇳 China</div>
+    <div class="stab" id="st-buscar" onclick="setSeg('buscar')">🔍 Buscar</div>
+  </div>
+
+  <div class="seg-content">
+
+    <!-- SEGMENTO NUEVO -->
+    <div class="seg on" id="seg-nuevo">
+      <div class="chat-msgs" id="chat-nuevo">
+        <div class="msg msg-b">¿Primera vez que escribe? Seleccioná el escenario 👇</div>
+      </div>
+      <div class="qbtns">
+        <div class="qbtn" onclick="showMsg('nuevo','cómo funciona largo','t-cf-largo')">📦 Explicar cómo funciona (versión completa)</div>
+        <div class="qbtn" onclick="showMsg('nuevo','cómo funciona corto','t-cf-corto')">⚡ Explicar cómo funciona (versión corta)</div>
+        <div class="qbtn" onclick="showMsg('nuevo','registro','t-registro')">📝 Invitar a registrarse</div>
+        <div class="qbtn" onclick="showMsg('nuevo','negocio','t-negocios')">🏢 Es un negocio / importador</div>
+        <div class="qbtn" onclick="showMsg('nuevo','ahorro cobro','t-ahorro')">💰 Preguntan por el costo</div>
+        <div class="qbtn" onclick="showMsg('nuevo','uso casillero amazon','t-uso-casillero')">🛒 Cómo usar el casillero (Amazon)</div>
+        <div class="qbtn" onclick="showMsg('nuevo','duplicacion canales','t-duplicacion')">🚦 Está escribiendo por varios canales</div>
+      </div>
+    </div>
+
+    <!-- SEGMENTO USA -->
+    <div class="seg" id="seg-usa">
+      <div class="chat-msgs" id="chat-usa">
+        <div class="msg msg-b">¿Qué necesita el cliente de USA? 👇</div>
+      </div>
+      <div class="qbtns">
+        <div class="qbtn" onclick="showMsg('usa','bienvenida cliente activo','t-busa')">👋 Bienvenida cliente activo</div>
+        <div class="qbtn" onclick="showMsg('usa','cuánto cuesta envío tarifa precio','t-costos')">💸 Pregunta cuánto cuesta el envío</div>
+        <div class="qbtn" onclick="showMsg('usa','iphone celular samsung','t-iphone')">📱 Quiere enviar un iPhone / celular</div>
+        <div class="qbtn" onclick="showMsg('usa','laptop nintendo electrónico','t-laptop')">💻 Quiere enviar laptop / Nintendo</div>
+        <div class="qbtn" onclick="showMsg('usa','despacho factura portal','t-despacho')">📤 Pregunta cómo despachar</div>
+        <div class="qbtn" onclick="showMsg('usa','pagué confirmación qué sigue','t-postpago')">✅ Ya pagó — confirmar</div>
+        <div class="qbtn" onclick="showMsg('usa','seguimiento rastreo dónde está manifestado','t-seguimiento')">🔍 Pregunta por su paquete</div>
+        <div class="qbtn" onclick="showMsg('usa','taxes impuestos devolución','t-taxes')">🧾 Pregunta por devolución de taxes</div>
+        <div class="qbtn" onclick="showMsg('usa','cobro mínimo libras precio','t-cobro')">⚖️ Pregunta por cobro mínimo</div>
+        <div class="qbtn" onclick="showMsg('usa','iva arancel normativa 2026','t-normativa')">📜 Pregunta por IVA / normativa 2026</div>
+      </div>
+    </div>
+
+    <!-- SEGMENTO CHINA -->
+    <div class="seg" id="seg-china">
+      <div class="chat-msgs" id="chat-china">
+        <div class="msg msg-b">¿Qué tipo de cliente China es? Primero el filtro 👇</div>
+      </div>
+
+      <div class="cn-lbl">¿Cómo compra el cliente?</div>
+      <div class="cn-opts-wrap">
+        <label class="cn-opt" id="cop1" onclick="cnClick(this,'plat')"><input type="radio" name="cntipo" value="plat"><div class="cn-radio"></div><div><div class="cn-opt-t">AliExpress / Shein / Temu</div><div class="cn-opt-s">Plataformas con envío internacional directo</div></div></label>
+        <label class="cn-opt" id="cop2" onclick="cnClick(this,'alibaba-intl')"><input type="radio" name="cntipo" value="alibaba-intl"><div class="cn-radio"></div><div><div class="cn-opt-t">Alibaba — envía internacionalmente</div><div class="cn-opt-s">El proveedor puede despachar fuera de China</div></div></label>
+        <label class="cn-opt" id="cop3" onclick="cnClick(this,'alibaba-local')"><input type="radio" name="cntipo" value="alibaba-local"><div class="cn-radio"></div><div><div class="cn-opt-t">Alibaba — solo envía dentro de China</div><div class="cn-opt-s">No hace envíos internacionales</div></div></label>
+        <label class="cn-opt" id="cop4" onclick="cnClick(this,'proveedor')"><input type="radio" name="cntipo" value="proveedor"><div class="cn-radio"></div><div><div class="cn-opt-t">Proveedor propio / 1688 / fábrica directa</div><div class="cn-opt-s">Solo despacha dentro de China</div></div></label>
+        <label class="cn-opt" id="cop5" onclick="cnClick(this,'nosabe')"><input type="radio" name="cntipo" value="nosabe"><div class="cn-radio"></div><div><div class="cn-opt-t">No sé si el proveedor envía internacionalmente</div><div class="cn-opt-s">Hay que validar con el cliente primero</div></div></label>
+      </div>
+
+      <div id="cn-res" class="cn-res"></div>
+
+      <!-- Formulario solo cuando aplica China -->
+      <div id="cn-form" style="display:none">
+        <div class="divider"></div>
+        <div class="cn-lbl">Datos de la carga</div>
+        <div class="fin-g2">
+          <div><div class="fin-lbl" style="margin-top:0">Peso total (kg)</div><input class="fin" type="number" id="f-peso" placeholder="ej: 12" min="0"></div>
+          <div><div class="fin-lbl" style="margin-top:0">Cantidad cajas</div><input class="fin" type="number" id="f-cajas" placeholder="ej: 3" min="1"></div>
+        </div>
+        <div class="fin-lbl">Medidas de caja (cm) — Largo × Ancho × Alto</div>
+        <div class="fin-g3">
+          <input class="fin" type="number" id="f-l" placeholder="Largo" min="0">
+          <input class="fin" type="number" id="f-a" placeholder="Ancho" min="0">
+          <input class="fin" type="number" id="f-h" placeholder="Alto" min="0">
+        </div>
+        <div class="fin-lbl">Valor total de la carga (USD)</div>
+        <input class="fin" type="number" id="f-val" placeholder="ej: 450" min="0">
+        <div class="fin-lbl">¿Qué necesita? (opcional)</div>
+        <input class="fin" type="text" id="f-nec" placeholder="ej: cotización, dirección, tiempos...">
+        <button class="gen-btn" onclick="cnGenerar()">Generar mensaje →</button>
+      </div>
+
+      <!-- Botones China por etapa -->
+      <div id="cn-btns" style="margin-top:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Flujo de atención por etapa</div>
+        <div class="qbtns">
+          <div class="qbtn" onclick="showMsg('china','apertura segmentar tipo cliente','t-china-apertura')">1️⃣ Cliente dice: "quiero info sobre China"</div>
+          <div class="qbtn" onclick="showMsg('china','aliexpress shein temu plataforma','t-china-plat')">2A → Compra en AliExpress / Shein / Temu</div>
+          <div class="qbtn" onclick="showMsg('china','alibaba validar internacional','t-china-alibaba')">2B → Compra en Alibaba (validar proveedor)</div>
+          <div class="qbtn" onclick="showMsg('china','proveedor propio 1688 fábrica','t-china-proveedor')">2C → Proveedor propio / 1688 / fábrica</div>
+          <div class="qbtn" onclick="showMsg('china','pedir datos exactos carga','t-china-pedir-datos')">3️⃣ Pedir datos exactos de la carga</div>
+          <div class="qbtn" onclick="showMsg('china','rutas opciones triangulada directa','t-china-rutas')">3️⃣ Presentar las rutas disponibles</div>
+          <div class="qbtn" onclick="showMsg('china','instrucciones guangzhou triangulada','t-china-instruc-gz')">4️⃣ Dar dirección Guangzhou (triangulada)</div>
+          <div class="qbtn" onclick="showMsg('china','instrucciones yiwu directa colombia','t-china-instruc-yw')">4️⃣ Dar dirección Yiwu (directa)</div>
+          <div class="qbtn" onclick="showMsg('china','seguimiento proceso portal','t-china-seguimiento')">5️⃣ Seguimiento de la carga</div>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 6px">Plantillas generales</div>
+        <div class="qbtns">
+          <div class="qbtn" onclick="showMsg('china','primer contacto bienvenida','t-china-bv')">👋 Presentar el servicio China</div>
+          <div class="qbtn" onclick="showMsg('china','cotización datos','t-cotizacion')">📊 Pedir datos para cotizar</div>
+          <div class="qbtn" onclick="showMsg('china','asesor felipe especializado','t-felipe')">👨‍💼 Asignar asesor Felipe</div>
+          <div class="qbtn" onclick="showMsg('china','redirección whatsapp','t-redir-china')">🔀 Redirigir a WhatsApp</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEGMENTO BUSCAR -->
+    <div class="seg" id="seg-buscar">
+      <div class="chat-msgs" id="chat-buscar">
+        <div class="msg msg-b">Escribí una palabra o situación y te muestro la plantilla. Ej: "iphone", "frustrado", "yiwu", "factura"...</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div class="ia-row">
+          <textarea id="ai-ta" placeholder="Describí la situación del cliente..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSearch()}"></textarea>
+          <button class="sndbtn" onclick="aiSearch()">↑</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /seg-content -->
+</div><!-- /ai -->
+
+</div><!-- /app -->
+<script>
+// ============================================================
+// KNOWLEDGE BASE
+// ============================================================
+const KB = [
+  {id:'t-cf-largo',   seg:'nuevo',  tags:'nuevo bienvenida cómo funciona casillero explicar largo completo qué es logybox',    titulo:'Cómo funciona (mensaje largo)'},
+  {id:'t-cf-corto',   seg:'nuevo',  tags:'nuevo bienvenida cómo funciona corto rápido primer contacto',                         titulo:'Cómo funciona (mensaje corto)'},
+  {id:'t-registro',   seg:'nuevo',  tags:'registro abrir casillero link inscribirse crear cuenta nueva',                         titulo:'Mensaje de registro'},
+  {id:'t-negocios',   seg:'nuevo',  tags:'negocio empresa importador b2b comercial aliado',                                     titulo:'Para negocios / importadores'},
+  {id:'t-ahorro',     seg:'nuevo',  tags:'ahorro costo precio cobro mínimo libras tip como funciona',                           titulo:'Cómo funciona + ahorro'},
+  {id:'t-uso-casillero',seg:'nuevo',tags:'uso casillero amazon comprar cómo usar paso a paso dirección',                        titulo:'Uso del casillero paso a paso'},
+  {id:'t-duplicacion',seg:'nuevo',  tags:'duplicar canales instagram whatsapp esperar volumen alto mensajes',                   titulo:'Evitar duplicación de mensajes'},
+  {id:'t-busa',       seg:'usa',    tags:'bienvenida cliente activo usa miami primera vez nuevo registro',                      titulo:'Bienvenida cliente USA'},
+  {id:'t-costos',     seg:'usa',    tags:'costo precio tarifa libra 2.30 seguro recargo import fee cuánto cuánto vale',                 titulo:'Costos envío USA → Colombia'},
+  {id:'t-iphone',     seg:'usa',    tags:'iphone celular teléfono 85 usd apple samsung smartphone envío especial',              titulo:'Envío iPhone / celular $85'},
+  {id:'t-celular-corto',seg:'usa',  tags:'celular teléfono 85 opciones seguro total estándar',                                  titulo:'Celular — versión corta'},
+  {id:'t-laptop',     seg:'usa',    tags:'laptop portátil computador 65 125 martes semana electronico especial',          titulo:'Laptop / electrónicos $60'},
+  {id:'t-nintendo',   seg:'usa',    tags:'nintendo consola videojuego 60 martes semana especial',                               titulo:'Nintendo / consola $60'},
+  {id:'t-despacho',   seg:'usa',    tags:'despacho factura portal pago cobro valor cuánto cómo enviar',                        titulo:'Despacho — cómo funciona'},
+  {id:'t-postpago',   seg:'usa',    tags:'post pago pagué confirmación qué sigue manifestado',                                  titulo:'Confirmación post-pago'},
+  {id:'t-seguimiento',seg:'usa',    tags:'seguimiento rastreo dónde está estado paquete manifestado tracking correo',          titulo:'Seguimiento de envíos'},
+  {id:'t-taxes',      seg:'usa',    tags:'taxes tax impuestos devolución certificado amazon apple libre',                       titulo:'Devolución de taxes'},
+  {id:'t-cobro',      seg:'usa',    tags:'cobro mínimo 5 libras 2.20 precio tarifa básico calculadora',                                      titulo:'Cobro mínimo'},
+  {id:'t-normativa',  seg:'usa',    tags:'normativa iva arancel 2026 impuesto 200 declarado sin impuesto',                      titulo:'Normativa 2026 — Sin impuestos hasta $200'},
+  {id:'t-china-bv',   seg:'china',  tags:'primer contacto bienvenida china presentar servicio opciones rutas',                 titulo:'Primer contacto China'},
+  {id:'t-cotizacion', seg:'china',  tags:'cotización china datos peso medidas cajas valor calcular calculadora',               titulo:'Solicitar cotización China'},
+  {id:'t-felipe',     seg:'china',  tags:'asesor felipe china especializado asignar contactar whatsapp',                       titulo:'Asignar asesor Felipe'},
+  {id:'t-redir-china',seg:'china',  tags:'redirección whatsapp china comercial asesor directo',                                titulo:'Redirección asesor China'},
+  {id:'t-redir-usa',  seg:'usa',    tags:'redirección whatsapp usa comercial asesor',                                          titulo:'Redirección asesor USA'},
+  {id:'t-dir-gz',     seg:'china',  tags:'guangzhou bodega dirección china triangulada miami',                                 titulo:'Dirección bodega Guangzhou'},
+  {id:'t-dir-yw',     seg:'china',  tags:'yiwu bodega dirección china directa bogotá marítimo',                               titulo:'Dirección bodega Yiwu'},
+  {id:'t-costos',     seg:'info',   tags:'tarifas completas servicios adicionales laptop celular re-empaque compramos por ti inspección china'},
+  {id:'t-dir-usa',    seg:'info',   tags:'dirección miami florida 6900 NW casillero lbx',                                     titulo:'Dirección casillero Miami'},
+  {id:'t-frust1',     seg:'aten',   tags:'frustrado molesto enojado queja problema empatía bravo',                            titulo:'Cliente frustrado — apertura'},
+  {id:'t-frust2',     seg:'aten',   tags:'frases empatía frustrado molesto queja',                                            titulo:'Frases de empatía'},
+  {id:'t-desp1',      seg:'aten',   tags:'despedida cierre chat cerrar estándar',                                             titulo:'Despedida estándar'},
+  {id:'t-desp2',      seg:'aten',   tags:'despedida cálida cálido cierre',                                                   titulo:'Despedida cálida'},
+  {id:'t-desp3',      seg:'aten',   tags:'despedida difícil problema dura cierre',                                           titulo:'Despedida post situación difícil'},
+  {id:'t-feedback',   seg:'aten',   tags:'feedback reseña google calificación estrella feliz contento',                       titulo:'Invitación reseña Google'},
+  {id:'t-espera',     seg:'aten',   tags:'espera revisando gestión un momento caso',                                          titulo:'Mensaje de espera'},
+  {id:'t-nosol',      seg:'aten',   tags:'sin solución no puedo alternativa acompañar',                                       titulo:'Sin solución inmediata'},
+  {id:'t-lucho',      seg:'aten',   tags:'lucho bot fuera horario offline mensaje automático',                                titulo:'Fuera de horario (Lucho)'},
+  {id:'t-datos-carga',seg:'china',  tags:'datos carga peso medidas cajas valor pedir solicitar',                              titulo:'Solicitar datos de carga'},
+  {id:'t-china-apertura',seg:'china',tags:'china apertura primer mensaje segmentar tipo cliente plataforma proveedor info',            titulo:'China — Segmentar cliente (Etapa 1)'},
+  {id:'t-china-plat',    seg:'china',tags:'aliexpress shein temu plataforma redirigir miami usa casillero',                           titulo:'China — AliExpress/Shein/Temu → USA (Etapa 2A)'},
+  {id:'t-china-alibaba', seg:'china',tags:'alibaba validar proveedor internacional dentro china pregunta',                            titulo:'China — Alibaba validar envío (Etapa 2B)'},
+  {id:'t-alibaba-intl',  seg:'china',tags:'alibaba internacional miami redirigir usa casillero',                                      titulo:'China — Alibaba intl → USA'},
+  {id:'t-china-proveedor',seg:'china',tags:'proveedor propio 1688 fábrica directa china preguntar producto',                         titulo:'China — Proveedor propio (Etapa 2C)'},
+  {id:'t-china-pedir-datos',seg:'china',tags:'pedir datos exactos carga cotización china',                                           titulo:'China — Pedir datos exactos (Etapa 3)'},
+  {id:'t-china-rutas',   seg:'china',tags:'rutas triangulada directa opciones comparar miami bogotá',                                titulo:'China — Presentar rutas (Etapa 3)'},
+  {id:'t-china-instruc-gz',seg:'china',tags:'guangzhou instrucciones bodega despachar triangulada proveedores',                      titulo:'China — Instrucciones bodega Guangzhou (Etapa 4)'},
+  {id:'t-china-instruc-yw',seg:'china',tags:'yiwu instrucciones bodega despachar directa colombia',                                  titulo:'China — Instrucciones bodega Yiwu (Etapa 4)'},
+  {id:'t-china-seguimiento',seg:'china',tags:'seguimiento china carga proceso portal felipe',                                        titulo:'China — Seguimiento de la carga (Etapa 5)'},
+];
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function open_(url){ window.open(url,'_blank'); }
+const secTitles = {nuevos:'Clientes nuevos',usa:'Servicio USA',china:'Servicio China',atencion:'Atención al cliente',info:'Info rápida',flujos:'Flujos'};
+let curSec = 'nuevos';
+function goSec(name, el) {
+  curSec = name;
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(el) el.classList.add('on');
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+name)?.classList.add('on');
+  document.getElementById('sec-title').textContent = secTitles[name]||name;
+  document.getElementById('content-area').scrollTop = 0;
+  document.getElementById('srch-in').value = '';
+  doSearch('');
+}
+
+// ============================================================
+// CARDS
+// ============================================================
+const openCards = new Set();
+function tog(id){
+  const bd=document.getElementById('bd-'+id), cv=document.getElementById('cv-'+id);
+  if(!bd)return;
+  if(openCards.has(id)){openCards.delete(id);bd.classList.remove('op');cv?.classList.remove('op');}
+  else{openCards.add(id);bd.classList.add('op');cv?.classList.add('op');}
+}
+function openC(id){
+  if(!openCards.has(id))tog(id);
+  setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+// ============================================================
+// COPY
+// ============================================================
+function cp(e,id){
+  e.stopPropagation();
+  const el=document.getElementById(id); if(!el)return;
+  const btn=e.target;
+  let txt=(el.innerText||el.textContent).replace(/Copiar\s*$/,'').trim();
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta)};
+  navigator.clipboard?.writeText(txt).catch(fb)||fb();
+  btn.textContent='✓'; setTimeout(()=>btn.textContent='Copiar',1800);
+  const t=document.getElementById('toast'); t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800);
+}
+
+// ============================================================
+// MAIN SEARCH
+// ============================================================
+function doSearch(v){
+  const q=v.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const srb=document.getElementById('sr-box');
+  if(!q){srb.classList.remove('on');srb.innerHTML='';document.getElementById('sec-'+curSec)?.classList.add('on');return;}
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  const hits=KB.filter(i=>i.titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").includes(q)||i.tags.includes(q));
+  srb.classList.add('on');
+  const secMap={nuevo:'nuevos',usa:'usa',china:'china',aten:'atencion',info:'info'};
+  srb.innerHTML=hits.length?hits.map(h=>`<div class="sri" onclick="gotoTpl('${h.id}','${secMap[h.seg]||h.seg}')"><div class="sri-t">${h.titulo}</div><div class="sri-s">${secTitles[secMap[h.seg]]||h.seg}</div></div>`).join(''):`<div style="padding:20px;text-align:center;color:var(--mu);font-size:13px">Sin resultados para "<strong>${v}</strong>"</div>`;
+}
+function gotoTpl(tplId,sec){
+  document.getElementById('srch-in').value=''; doSearch('');
+  const navMap={nuevos:0,usa:1,china:2,atencion:3,info:4,flujos:5};
+  const navItems=document.querySelectorAll('.ni');
+  curSec=sec; navItems.forEach(n=>n.classList.remove('on')); navItems[navMap[sec]]?.classList.add('on');
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on')); document.getElementById('sec-'+sec)?.classList.add('on');
+  document.getElementById('sec-title').textContent=secTitles[sec]||sec;
+  document.getElementById('content-area').scrollTop=0;
+  const tplEl=document.getElementById(tplId); if(!tplEl)return;
+  const card=tplEl.closest('.card'); if(!card)return;
+  // Close all other open cards first
+  [...openCards].forEach(id=>{ if(id!==card.id){ const bd=document.getElementById('bd-'+id); const cv=document.getElementById('cv-'+id); bd?.classList.remove('op'); cv?.classList.remove('op'); openCards.delete(id); }});
+  setTimeout(()=>{ openC(card.id); setTimeout(()=>tplEl.scrollIntoView({behavior:'smooth',block:'center'}),150); },100);
+}
+
+// ============================================================
+// AI PANEL — SEGMENTS
+// ============================================================
+let curSeg='nuevo';
+function setSeg(s){
+  curSeg=s;
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('st-'+s)?.classList.add('on');
+  document.querySelectorAll('.seg').forEach(sg=>sg.classList.remove('on'));
+  document.getElementById('seg-'+s)?.classList.add('on');
+}
+
+// Show message from quickbtn — Apple collapsible card
+function showMsg(seg,keywords,tplId){
+  const chat=document.getElementById('chat-'+seg); if(!chat)return;
+  const tplEl=document.getElementById(tplId); if(!tplEl)return;
+  let txt=(tplEl.innerText||tplEl.textContent).replace(/Copiar\s*$/,'').trim();
+
+  // Check if this tplId already shown — toggle it
+  const existing=chat.querySelector('[data-tpl="'+tplId+'"]');
+  if(existing){
+    const body=existing.querySelector('.sr-result-body');
+    const hdr=existing.querySelector('.sr-result-hdr');
+    const chev=existing.querySelector('.sr-chev-icon');
+    const isOpen=body.classList.contains('open');
+    body.classList.toggle('open',!isOpen);
+    hdr.classList.toggle('open-hdr',!isOpen);
+    chev.classList.toggle('open',!isOpen);
+    chat.scrollTop=chat.scrollHeight;
+    return;
+  }
+
+  // Build collapsible result card
+  const wrap=document.createElement('div');
+  wrap.className='sr-result'; wrap.dataset.tpl=tplId;
+
+  const hdr=document.createElement('div');
+  hdr.className='sr-result-hdr open-hdr';
+
+  const titleWrap=document.createElement('div');
+  titleWrap.className='sr-result-title';
+  titleWrap.innerHTML='📌 <span>'+keywords+'</span>';
+
+  const chev=document.createElement('span');
+  chev.className='sr-chev-icon open'; chev.textContent='⌃';
+
+  hdr.appendChild(titleWrap); hdr.appendChild(chev);
+
+  const body=document.createElement('div');
+  body.className='sr-result-body open'; body.textContent=txt;
+
+  const copyBtn=document.createElement('button');
+  copyBtn.className='sr-copy-btn'; copyBtn.innerHTML='<span>📋</span> Copiar plantilla';
+  copyBtn.onclick=(e)=>{
+    e.stopPropagation();
+    doCopy(txt,copyBtn,'✓ Copiada');
+  };
+
+  hdr.onclick=()=>{
+    const isOpen=body.classList.contains('open');
+    body.classList.toggle('open',!isOpen);
+    hdr.classList.toggle('open-hdr',!isOpen);
+    chev.classList.toggle('open',!isOpen);
+  };
+
+  wrap.appendChild(hdr); wrap.appendChild(body); wrap.appendChild(copyBtn);
+  chat.appendChild(wrap);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+// Central copy helper
+function doCopy(txt,btn,label){
+  navigator.clipboard?.writeText(txt).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=txt;
+    ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  const orig=btn.innerHTML;
+  btn.innerHTML='<span>✓</span> '+(label||'Copiado');
+  btn.classList.add('copied');
+  setTimeout(()=>{ btn.innerHTML=orig; btn.classList.remove('copied'); },1800);
+  const t=document.getElementById('toast'); t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800);
+}
+
+// ============================================================
+// CHINA FILTER
+// ============================================================
+function cnClick(label,val){
+  // Unselect all, select clicked
+  document.querySelectorAll('.cn-opt').forEach(l=>{ l.classList.remove('sel'); });
+  label.classList.add('sel');
+  label.querySelector('input[type=radio]').checked=true;
+  // Run filter logic
+  cnFiltroRun(val);
+}
+function cnFiltro(radio){
+  document.querySelectorAll('.cn-opt').forEach(l=>l.classList.remove('sel'));
+  radio.closest('.cn-opt').classList.add('sel');
+  const v=radio.value;
+  cnFiltroRun(v);
+}
+function cnFiltroRun(v){
+  const res=document.getElementById('cn-res'); res.style.display='block';
+  const form=document.getElementById('cn-form'); form.style.display='none';
+  const cfgs={
+    'plat':        {cls:'al-i', icon:'🇺🇸', txt:'<strong>Casillero USA (Miami)</strong><br>AliExpress, Shein y Temu envían internacionalmente. El cliente pone la dirección de Miami + su código LBX como destino de la compra.', auto:'plat'},
+    'alibaba-intl':{cls:'al-i', icon:'🇺🇸', txt:'<strong>Casillero USA (Miami)</strong><br>El proveedor de Alibaba envía internacionalmente. El cliente le da la dirección de Miami + código LBX al proveedor como dirección de despacho.', auto:'alibaba-intl'},
+    'alibaba-local':{cls:'al-w',icon:'🇨🇳', txt:'<strong>Casillero China</strong><br>El proveedor solo despacha dentro de China. Completá los datos de la carga abajo para generar el mensaje.', auto:null},
+    'proveedor':   {cls:'al-w', icon:'🇨🇳', txt:'<strong>Casillero China</strong><br>Proveedor propio / 1688 solo despacha dentro de China. Completá los datos de la carga abajo.', auto:null},
+    'nosabe':      {cls:'al-ok',icon:'❓',  txt:'<strong>Preguntar primero</strong><br>Preguntarle al cliente: <em>"¿Tu proveedor envía internacionalmente o solo dentro de China?"</em><br>Si sí → Casillero USA &nbsp;·&nbsp; Si no → Casillero China', auto:'nosabe'},
+  };
+  const cfg=cfgs[v]; if(!cfg)return;
+  res.innerHTML=`<div class="al ${cfg.cls}" style="border-radius:10px;margin:0;font-size:12px">${cfg.icon} ${cfg.txt}</div>`;
+  if(!cfg.auto){ form.style.display='block'; }
+  else if(cfg.auto==='plat'||cfg.auto==='alibaba-intl'){
+    const msg=cfg.auto==='plat'
+      ? (document.getElementById('t-cf-corto')?.innerText||'').replace(/Copiar\s*$/,'').trim()
+      : '¡Perfecto! Para Alibaba con envío internacional usás el casillero USA.\n\nPoné la dirección de Miami como destino del despacho de tu proveedor:\n📦 6900 NW 46th Street, Miami - Florida 33166\nTel: +1 (305) 507-8635 + TU CÓDIGO LBX\n\nTu código LBX lo encontrás en tu portal (box.logybox.com). 👍';
+    setTimeout(()=>showChinaMsg(msg),200);
+  } else if(cfg.auto==='nosabe'){
+    const m='Ej@ mij@, una pregunta rápida antes de darte la dirección:\n\n¿Tu proveedor hace envíos internacionales o solo despacha dentro de China?\n\n• Si envía internacionalmente → te damos la dirección de Miami y lo recibimos allá\n• Si solo envía dentro de China → usamos nuestra bodega en China y lo traemos a Colombia\n\n¿Sabés cuál es el caso? 😊';
+    setTimeout(()=>showChinaMsg(m),200);
+  }
+}
+
+function showChinaMsg(txt){
+  const chat=document.getElementById('chat-china'); if(!chat)return;
+
+  // Build collapsible result card
+  const wrap=document.createElement('div'); wrap.className='sr-result'; wrap.style.marginBottom='8px';
+  const hdr=document.createElement('div'); hdr.className='sr-result-hdr open-hdr';
+  const titleWrap=document.createElement('div'); titleWrap.className='sr-result-title';
+  titleWrap.innerHTML='📋 <span>Plantilla generada</span>';
+  const chev=document.createElement('span'); chev.className='sr-chev-icon open'; chev.textContent='⌃';
+  hdr.appendChild(titleWrap); hdr.appendChild(chev);
+  const body=document.createElement('div'); body.className='sr-result-body open'; body.textContent=txt;
+  const copyBtn=document.createElement('button'); copyBtn.className='sr-copy-btn';
+  copyBtn.innerHTML='<span>📋</span> Copiar plantilla';
+  copyBtn.onclick=(e)=>{ e.stopPropagation(); doCopy(txt,copyBtn,'✓ Copiada'); };
+  hdr.onclick=()=>{
+    const isOpen=body.classList.contains('open');
+    body.classList.toggle('open',!isOpen); hdr.classList.toggle('open-hdr',!isOpen); chev.classList.toggle('open',!isOpen);
+  };
+  wrap.appendChild(hdr); wrap.appendChild(body); wrap.appendChild(copyBtn);
+  chat.appendChild(wrap);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+// ============================================================
+// CHINA GENERAR MENSAJE CON DATOS
+// ============================================================
+function cnGenerar(){
+  const tipo=document.querySelector('input[name="cntipo"]:checked')?.value;
+  const peso=parseFloat(document.getElementById('f-peso').value)||0;
+  const cajas=parseInt(document.getElementById('f-cajas').value)||1;
+  const l=parseFloat(document.getElementById('f-l').value)||0;
+  const a=parseFloat(document.getElementById('f-a').value)||0;
+  const h=parseFloat(document.getElementById('f-h').value)||0;
+  const val=parseFloat(document.getElementById('f-val').value)||0;
+  const nec=document.getElementById('f-nec').value.trim();
+  const tieneDatos=peso||cajas>1||(l&&a&&h)||val;
+  if(!tieneDatos){
+    showChinaMsg('Todavía no tenés los datos. Acá va el mensaje para pedírselos:\n\n---\n¡Perfecto! Para darte la dirección de bodega y cotizarte el envío, necesito estos datos de tu carga:\n\n📦 Peso de empaque (kg)\n📐 Medidas: largo × ancho × alto (cm)\n📦 Cantidad de cajas\n💰 Valor total de la carga (USD)\n\nCon esos datos te cuento la modalidad más conveniente. 😊\n---');
+    return;
+  }
+  const vol=l&&a&&h?((l*a*h)/6000)*cajas:0;
+  const chargeW=Math.max(peso,vol);
+  const isLarge=chargeW>50||val>500;
+  let msg='';
+  if(isLarge){
+    msg='¡Listo! Con los datos de tu carga tenemos dos opciones:\n\n';
+    msg+='1️⃣ RUTA TRIANGULADA (China → Miami → Colombia)\n';
+    msg+='📍 Bodega Guangzhou: 广州市白云区江夏学校北路1号尚龙大厦A519 · 赖华平 13632458039\n';
+    msg+='⏱️ Express: 10-12 días a Miami · Marítimo: 30-40 días a Miami\n\n';
+    msg+='2️⃣ RUTA DIRECTA (China → Bogotá · mínimo 0.5 m³)\n';
+    msg+='📍 Bodega Yiwu: 浙江省义乌市廿三里宝元路3号3栋1楼北1-D · Guilia 高娅君 15057961291\n';
+    msg+='⏱️ 60-70 días directo a Bogotá · Pago: 50% antes, 50% al llegar\n\n';
+    msg+='⚠️ En ambas: pedile al proveedor marcar las cajas con tu código LBX-####.\n';
+    msg+='¿Cuál ruta preferís? 😊';
+  } else {
+    msg='¡Listo! Te cuento lo más conveniente para tu carga:\n\n';
+    msg+='📦 Modalidad recomendada: Consolidado Express — Ruta Triangulada (China → Miami → Colombia)\n';
+    msg+='⏱️ Tiempo a Miami: 10-12 días\n\n';
+    msg+='Dirección de bodega para que tu proveedor despache:\n\n';
+    msg+='广州市白云区江夏学校北路1号尚龙大厦A519\nContacto: 赖华平 13632458039\n\n';
+    msg+='⚠️ Pedile a tu proveedor que marque las cajas con tu código LBX-####.\n\n';
+    msg+='✅ 1 mes bodegaje gratuito · Sin costo consolidación\n\n';
+    msg+='Una vez que llegue a Miami, despachás a Colombia desde tu portal normalmente. ¿Tenés alguna duda? 😊';
+  }
+  if(chargeW>0) msg='📊 Peso cobrable: ~'+chargeW.toFixed(1)+' kg (mayor entre real y volumétrico)\n\n'+msg;
+  if(nec) msg+='\n\n📝 El cliente necesita: '+nec;
+  showChinaMsg(msg);
+}
+
+// ============================================================
+// AI SEARCH (segmento Buscar)
+// ============================================================
+function aiSearch(){
+  const ta=document.getElementById('ai-ta');
+  const q=ta.value.trim(); if(!q)return;
+  ta.value=''; ta.style.height='auto';
+  const chat=document.getElementById('chat-buscar');
+
+  // User bubble
+  const u=document.createElement('div'); u.className='msg msg-u'; u.textContent=q; chat.appendChild(u);
+
+  const norm=q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const words=norm.split(/\s+/).filter(w=>w.length>2);
+
+  // Score
+  const scored=KB.map(item=>{
+    const txt=(item.titulo+' '+item.tags).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    let score=0;
+    words.forEach(w=>{if(txt.includes(w))score+=2;});
+    if(txt.includes(norm))score+=8;
+    return {item,score};
+  }).filter(x=>x.score>=2).sort((a,b)=>b.score-a.score).slice(0,4);
+
+  if(scored.length){
+    // Label
+    const lbl=document.createElement('div');
+    lbl.style.cssText='font-size:11px;color:#8e8e93;margin:4px 2px 8px;font-weight:500';
+    lbl.textContent=scored.length+' resultado'+(scored.length>1?'s':'');
+    chat.appendChild(lbl);
+
+    scored.forEach(({item},idx)=>{
+      const tplEl=document.getElementById(item.id);
+      let txt=tplEl?(tplEl.innerText||tplEl.textContent).replace(/Copiar\s*$/,'').trim():'';
+
+      const wrap=document.createElement('div');
+      wrap.className='sr-result'; wrap.dataset.tpl=item.id;
+
+      const hdr=document.createElement('div');
+      hdr.className='sr-result-hdr'+(idx===0?' open-hdr':'');
+
+      const titleWrap=document.createElement('div');
+      titleWrap.className='sr-result-title';
+      titleWrap.innerHTML='📌 <span style="font-size:12px">'+item.titulo+'</span>';
+
+      const chev=document.createElement('span');
+      chev.className='sr-chev-icon'+(idx===0?' open':'');
+      chev.textContent='⌃';
+
+      hdr.appendChild(titleWrap); hdr.appendChild(chev);
+
+      const body=document.createElement('div');
+      body.className='sr-result-body'+(idx===0?' open':'');
+      body.textContent=txt;
+
+      const copyBtn=document.createElement('button');
+      copyBtn.className='sr-copy-btn';
+      copyBtn.innerHTML='<span>📋</span> Copiar plantilla';
+      copyBtn.onclick=(e)=>{ e.stopPropagation(); doCopy(txt,copyBtn,'✓ Copiada'); };
+
+      hdr.onclick=()=>{
+        const isOpen=body.classList.contains('open');
+        // If opening, close all siblings first
+        if(!isOpen){
+          chat.querySelectorAll('.sr-result').forEach(wr=>{
+            wr.querySelector('.sr-result-body')?.classList.remove('open');
+            wr.querySelector('.sr-result-hdr')?.classList.remove('open-hdr');
+            wr.querySelector('.sr-chev-icon')?.classList.remove('open');
+          });
+        }
+        body.classList.toggle('open',!isOpen);
+        hdr.classList.toggle('open-hdr',!isOpen);
+        chev.classList.toggle('open',!isOpen);
+      };
+
+      wrap.appendChild(hdr); wrap.appendChild(body); wrap.appendChild(copyBtn);
+      chat.appendChild(wrap);
+    });
+  } else {
+    const b=document.createElement('div'); b.className='msg msg-b';
+    b.textContent='Sin resultados. Probá: "iphone", "factura", "frustrado", "yiwu", "taxes", "bienvenida", "laptop", "registro", "china", "despacho"...';
+    chat.appendChild(b);
+  }
+  chat.scrollTop=chat.scrollHeight;
+}
+</script>
+</body>
+</html>
